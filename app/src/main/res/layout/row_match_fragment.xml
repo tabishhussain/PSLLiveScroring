@@ -1,19 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="250dp"
     app:cardBackgroundColor="@android:color/white"
     app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="4dp">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/matchStatusContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/teamA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/vs"
+                android:layout_toStartOf="@+id/vs"
+                android:gravity="right"
+                android:paddingBottom="2dp"
+                android:text="TeamA"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/vs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="4dp"
+                android:text="VS"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/teamB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_toEndOf="@+id/vs"
+                android:layout_toRightOf="@+id/vs"
+                android:paddingBottom="2dp"
+                android:text="TeamB"
+                android:textSize="20sp" />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/teamA"
+                android:background="@android:color/holo_blue_bright" />
+
+            <TextView
+                android:id="@+id/battingTeam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/separator"
+                android:layout_toLeftOf="@+id/separator1"
+                android:layout_toStartOf="@+id/separator1"
+                android:maxLines="2"
+                android:padding="2dp"
+                android:text="Batting Team is batting at"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/separator1"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/separator2"
+                android:layout_below="@+id/separator"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/teamA"
+                android:layout_toRightOf="@id/teamA"
+                android:background="@android:color/holo_blue_bright" />
+
+            <View
+                android:id="@+id/separator2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@id/matchStatus"
+                android:layout_marginBottom="4dp"
+                android:background="@android:color/holo_blue_bright" />
+
+            <TextView
+                android:id="@+id/matchStatus"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:padding="2dp"
+                android:text="Pakistan Need 16 runs to win from 12 balls" />
+
+            <TextView
+                android:id="@+id/battingScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/battingTeam"
+                android:layout_toLeftOf="@id/separator1"
+                android:layout_toStartOf="@id/separator1"
+                android:gravity="center"
+                android:text="122"
+                android:textSize="68sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/battingWickets"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/separator2"
+                android:layout_below="@id/battingScore"
+                android:layout_toEndOf="@+id/labelfor"
+                android:layout_toLeftOf="@id/separator1"
+                android:layout_toRightOf="@+id/labelfor"
+                android:layout_toStartOf="@id/separator1"
+                android:gravity="center"
+                android:text="10"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/labelfor"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_above="@id/separator2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/battingScore"
+                android:gravity="right|center_vertical"
+                android:text="for"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>

@@ -42,7 +42,7 @@ public class MatchStatus {
                 batsman1 = BBOInfo[1];
                 bowler = BBOInfo[2];
             }
-        } else if (inning == 0) {
+        } else if (inning == -1) {
             matchTimming = de;
         }
     }
@@ -152,8 +152,6 @@ public class MatchStatus {
                 ", matchTimming='" + matchTimming + '\'' +
                 ", battingTeam='" + battingTeam + '\'' +
                 ", matchTypes='" + matchTypes + '\'' +
-                ", scorePattern=" + scorePattern +
-                ", overPattern=" + overPattern +
                 '}';
     }
 }
