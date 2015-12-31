@@ -60,9 +60,15 @@ public class ListAdapter extends BaseAdapter {
             mHolder.batsman1.setText(matchStatus.batsman1);
             mHolder.batsman2.setText(matchStatus.batsman2);
             mHolder.bowler.setText(matchStatus.bowler);
-            mHolder.target.setText(matchStatus.target);
             mHolder.startingTime.setVisibility(View.GONE);
             setVisibility(mHolder, View.VISIBLE);
+            if(matchStatus.target != -1) {
+                mHolder.target.setText(matchStatus.target);
+            } else {
+                mHolder.label_need.setVisibility(View.INVISIBLE);
+                mHolder.target.setVisibility(View.INVISIBLE);
+                mHolder.label_to_win.setVisibility(View.INVISIBLE);
+            }
         } else {
             setVisibility(mHolder, View.INVISIBLE);
             mHolder.startingTime.setText(matchStatus.de);
