@@ -27,8 +27,8 @@ import java.util.List;
  */
 public class CurrentData {
 
-    protected List<MatchInfo> AllMatchInfo = new ArrayList<>();
-    protected List<MatchStatus> AllMatchStatus = new ArrayList<>();
+    public List<MatchInfo> AllMatchInfo = new ArrayList<>();
+    public List<MatchStatus> AllMatchStatus = new ArrayList<>();
     public Date infoLastModification = new Date();
     public Date statusLastModification = new Date();
 

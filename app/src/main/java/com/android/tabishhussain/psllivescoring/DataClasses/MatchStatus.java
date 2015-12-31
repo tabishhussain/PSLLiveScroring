@@ -1,5 +1,7 @@
 package com.android.tabishhussain.psllivescoring.DataClasses;
 
+import android.text.TextUtils;
+
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,10 +11,12 @@ import java.util.regex.Pattern;
  */
 public class MatchStatus {
 
+    public String de;
+    public String si;
     public String batsman1;
     public String batsman2;
     public String bowler;
-    public int inning = -1;
+    public int inning = 0;
     public String teamA;
     public String teamB;
     public int target = -1;
@@ -29,7 +33,7 @@ public class MatchStatus {
     Pattern overPattern = Pattern.compile("\\d{2}\\.\\d{1}");
 
 
-    public void setMatchStatus(String de) {
+    public void setPlayers(String de) {
         Matcher overMatcher = overPattern.matcher(de);
         if (overMatcher.find()) {
             String deSubString = de.substring(de.indexOf("(") + 1, de.indexOf(")"));
@@ -42,8 +46,68 @@ public class MatchStatus {
                 batsman1 = BBOInfo[1];
                 bowler = BBOInfo[2];
             }
-        } else if (inning == -1) {
+            if (de.contains("Match over")) {
+                matchOverStatement = getMatchOverStatement();
+            }
+        } else if (inning == 0) {
             matchTimming = de;
+        }
+    }
+
+    public void setInningAndTarget() {
+        for (int i = 0; i < 2; i++) {
+            if (teamAScore[i] != -1) {
+                inning++;
+            }
+        }
+        for (int i = 0; i < 2; i++) {
+            if (teamBScore[i] != -1) {
+                inning++;
+            }
+        }
+        switch (inning) {
+            case 1:
+                target = -1;
+                break;
+            case 2:
+                target = battingTeam.equals(teamA) ? teamBScore[0] + 1 : teamAScore[0] + 1;
+                break;
+            case 3:
+                target = -1;
+                break;
+            case 4:
+                target = battingTeam.equals(teamA) ? teamBScore[1] + 1 : teamAScore[1] + 1;
+
+        }
+    }
+
+    public String getMatchOverStatement() {
+        if (target > getBattingTeamScore()) {
+            return "Match over : " + getBowlingTeam() + "won the match by " + (target - getBattingTeamScore()) + " runs";
+        } else if (target < getBattingTeamScore()) {
+            return "Match over : " + battingTeam + "won the match by " + (10 - getBattingTeamWickets()) + " wickets";
+        } else {
+            return "Match Drawn";
+        }
+    }
+
+    public String getBowlingTeam() {
+        return battingTeam.equalsIgnoreCase(teamA) ? teamB : teamA;
+    }
+
+    public int getBowlingTeamScore() {
+        if (battingTeam.equalsIgnoreCase(teamA)) {
+            return (teamBScore[1] != -1) ? teamBScore[1] : teamBScore[0];
+        } else {
+            return (teamAScore[1] != -1) ? teamAScore[1] : teamAScore[0];
+        }
+    }
+
+    public int getBowlingTeamWickets() {
+        if (battingTeam.equalsIgnoreCase(teamA)) {
+            return (teamBWickets[1] != -1) ? teamBWickets[1] : teamBWickets[0];
+        } else {
+            return (teamAWickets[1] != -1) ? teamAWickets[1] : teamAWickets[0];
         }
     }
 
@@ -65,7 +129,8 @@ public class MatchStatus {
                         teamAWickets[count] = Integer.parseInt(score.group().split("/")[1]);
                     } else {
                         teamAScore[count] = Integer.parseInt(score.group());
-                        teamAWickets[count] = 0;
+                        if (!de.contains("Match over")) teamAWickets[count] = 0;
+                        else teamAWickets[count] = 10;
                     }
                 } else {
                     if (score.group().contains("/")) {
@@ -73,7 +138,8 @@ public class MatchStatus {
                         teamBWickets[count] = Integer.parseInt(score.group().split("/")[1]);
                     } else {
                         teamBScore[count] = Integer.parseInt(score.group());
-                        teamBWickets[count] = 0;
+                        if (!de.contains("Match over")) teamBWickets[count] = 0;
+                        else teamBWickets[count] = 10;
                     }
                 }
             }
@@ -131,6 +197,37 @@ public class MatchStatus {
         } else if (teamsInfo[1].contains("*")) {
             battingTeam = teamB;
         } else battingTeam = null;
+        setInningAndTarget();
+    }
+
+    public int getBattingTeamScore() {
+        if (battingTeam.equalsIgnoreCase(teamA)) {
+            return (teamAScore[1] != -1) ? teamAScore[1] : teamAScore[0];
+        } else {
+            return (teamBScore[1] != -1) ? teamBScore[1] : teamBScore[0];
+        }
+    }
+
+    public int getBattingTeamWickets() {
+        if (battingTeam.equalsIgnoreCase(teamA)) {
+            return (teamAWickets[1] != -1) ? teamAWickets[1] : teamAWickets[0];
+        } else {
+            return (teamBWickets[1] != -1) ? teamBWickets[1] : teamBWickets[0];
+        }
+    }
+
+    public String getMatchStatus() {
+        if (matchTypes.equalsIgnoreCase("test")) {
+            return si;
+        } else if (!TextUtils.isEmpty(matchOverStatement)) {
+            return matchOverStatement;
+        } else {
+            if (target != -1) {
+                return battingTeam + "required " + (target - getBattingTeamScore()) + " runs to win";
+            } else {
+                return "1st inning :" + battingTeam + "is batting at " + getBattingTeamScore();
+            }
+        }
     }
 
     @Override

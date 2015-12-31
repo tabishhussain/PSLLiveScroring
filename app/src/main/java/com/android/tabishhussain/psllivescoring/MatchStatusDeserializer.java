@@ -10,8 +10,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Tabish Hussain on 12/24/2015.
@@ -25,9 +23,11 @@ public class MatchStatusDeserializer implements JsonDeserializer<MatchStatus> {
         JsonObject matchObject = json.getAsJsonObject();
         String de = matchObject.get("de").getAsString();
         String si = matchObject.get("si").getAsString();
+        matchStatus.de = de;
+        matchStatus.si = si;
         matchStatus.setTeams(si);
         matchStatus.setMatchOvers(de);
-        matchStatus.setMatchStatus(de);
+        matchStatus.setPlayers(de);
         Log.d(AllMatchesActivity.TAG, matchStatus.toString());
         return matchStatus;
     }
