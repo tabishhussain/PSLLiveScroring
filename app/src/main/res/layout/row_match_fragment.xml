@@ -46,9 +46,9 @@
                 android:id="@+id/teamB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_above="@+id/separator"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_above="@+id/separator"
                 android:layout_toEndOf="@+id/vs"
                 android:layout_toRightOf="@+id/vs"
                 android:paddingBottom="2dp"
@@ -148,6 +148,138 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:text="Pakistan Need 16 runs to win from 12 balls" />
+
+            <TextView
+                android:id="@+id/startingTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/separator2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/separator"
+                android:gravity="center"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="Starting Time"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:background="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/label_batsman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_toRightOf="@id/separator1"
+                android:paddingLeft="8dp"
+                android:paddingTop="16dp"
+                android:text="Batsman : "
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/separator3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/label_batsman"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_toRightOf="@id/separator1"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/batsman1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator3"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_toRightOf="@id/separator1"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:text="Shahid Afridi"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/batsman2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/batsman1"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_toRightOf="@id/separator1"
+                android:paddingLeft="8dp"
+                android:text="Mohammad Hafeez"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/label_bowlers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/batsman2"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_toRightOf="@id/separator1"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:text="Bowler : "
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/separator4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/label_bowlers"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_toRightOf="@id/separator1"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/bowler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator4"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_toRightOf="@id/separator1"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:text="Mohammad Amir"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/label_need"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEED"
+                android:layout_toRightOf="@id/separator1"
+                android:layout_toEndOf="@id/separator1"
+                android:layout_above="@id/separator2"
+                android:textSize="12sp"
+                android:paddingLeft="8dp"/>
+
+            <TextView
+                android:id="@+id/target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/label_need"
+                android:layout_toEndOf="@id/label_need"
+                android:layout_above="@id/separator2"
+                android:text="122"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:textSize="32sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/label_to_win"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RUNS TO WIN"
+                android:layout_toRightOf="@id/target"
+                android:layout_toEndOf="@id/target"
+                android:layout_above="@id/separator2"
+                android:textSize="12sp"/>
 
         </RelativeLayout>
 
