@@ -25,6 +25,7 @@ public class MatchStatusDeserializer implements JsonDeserializer<MatchStatus> {
         String si = matchObject.get("si").getAsString();
         matchStatus.de = de;
         matchStatus.si = si;
+        matchStatus.id =  matchObject.get("id").getAsString();
         matchStatus.setTeams(si);
         matchStatus.setMatchOvers(de);
         matchStatus.setPlayers(de);

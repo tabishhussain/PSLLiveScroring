@@ -13,6 +13,7 @@ public class MatchStatus {
 
     public String de;
     public String si;
+    public String id;
     public String batsman1;
     public String batsman2;
     public String bowler;
@@ -25,12 +26,12 @@ public class MatchStatus {
     public int teamBScore[] = {-1, -1};
     public int teamAWickets[] = {-1, -1};
     public int teamBWickets[] = {-1, -1};
-    public String matchOverStatement;
+    public String matchOverStatement = null;
     public String matchTimming;
     public String battingTeam = null;
     public String matchTypes = null;
     Pattern scorePattern = Pattern.compile("(\\d+/\\d+)|(\\d+)");
-    Pattern overPattern = Pattern.compile("\\d{2}\\.\\d{1}");
+    Pattern overPattern = Pattern.compile("\\d+\\.\\d{1}");
 
 
     public void setPlayers(String de) {
@@ -79,6 +80,10 @@ public class MatchStatus {
                 target = battingTeam.equals(teamA) ? teamBScore[1] + 1 : teamAScore[1] + 1;
 
         }
+    }
+
+    public String getUrl(String id){
+        return "http://www.espncricinfo.com/ci/engine/match/"+id+".html";
     }
 
     public String getMatchOverStatement() {

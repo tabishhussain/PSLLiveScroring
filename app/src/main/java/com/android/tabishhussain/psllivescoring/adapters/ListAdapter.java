@@ -1,16 +1,21 @@
 package com.android.tabishhussain.psllivescoring.adapters;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.tabishhussain.psllivescoring.DataClasses.CurrentData;
 import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
 import com.android.tabishhussain.psllivescoring.R;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by tabish on 12/31/15.
@@ -52,18 +57,20 @@ public class ListAdapter extends BaseAdapter {
         MatchStatus matchStatus = mCurrentData.AllMatchStatus.get(position);
         mHolder.teamA.setText(matchStatus.teamA);
         mHolder.teamB.setText(matchStatus.teamB);
-        if (!TextUtils.isEmpty(matchStatus.battingTeam)) {
-            mHolder.battingTeamScore.setText(matchStatus.getBattingTeamScore() + "");
-            mHolder.battingTeamWickets.setText(matchStatus.getBattingTeamWickets() + "");
+        if (!TextUtils.isEmpty(matchStatus.battingTeam)) {IntTextViewAnimationController amountAnim;
+            amountAnim = new IntTextViewAnimationController(mHolder.battingTeamScore);
+            amountAnim.animateTo(matchStatus.getBattingTeamScore());
+            mHolder.overs.setText("->  In " + matchStatus.overs);
             mHolder.battingTeam.setText(matchStatus.battingTeam + "is batting at");
             mHolder.matchStatus.setText(matchStatus.getMatchStatus());
             mHolder.batsman1.setText(matchStatus.batsman1);
             mHolder.batsman2.setText(matchStatus.batsman2);
             mHolder.bowler.setText(matchStatus.bowler);
             mHolder.startingTime.setVisibility(View.GONE);
+            mHolder.battingWickets.setText("->  For " + matchStatus.getBattingTeamWickets() + " wickets");
             setVisibility(mHolder, View.VISIBLE);
-            if(matchStatus.target != -1) {
-                mHolder.target.setText(matchStatus.target);
+            if (matchStatus.target != -1) {
+                mHolder.target.setText(matchStatus.target + "");
             } else {
                 mHolder.label_need.setVisibility(View.INVISIBLE);
                 mHolder.target.setVisibility(View.INVISIBLE);
@@ -80,15 +87,31 @@ public class ListAdapter extends BaseAdapter {
 
     public void setData(CurrentData currentData) {
         mCurrentData = currentData;
+        Collections.sort(mCurrentData.AllMatchStatus, COMPARATOR);
         notifyDataSetChanged();
     }
+
+
+    public static final Comparator<MatchStatus> COMPARATOR = new Comparator<MatchStatus>() {
+        @Override
+        public int compare(MatchStatus lhs, MatchStatus rhs) {
+            if (TextUtils.isEmpty(lhs.matchOverStatement) && !TextUtils.isEmpty(rhs.matchOverStatement)) {
+                return -1;
+            } else if ((!TextUtils.isEmpty(lhs.matchOverStatement) && !TextUtils.isEmpty(rhs.matchOverStatement))
+                    || (TextUtils.isEmpty(lhs.matchOverStatement) && TextUtils.isEmpty(rhs.matchOverStatement))) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    };
 
     public static class ViewHolder {
         public final TextView teamA;
         public final TextView teamB;
         public final TextView battingTeam;
         public final TextView battingTeamScore;
-        public final TextView battingTeamWickets;
+        public final TextView overs;
         public final TextView matchStatus;
         public final TextView startingTime;
         public final TextView label_batsman;
@@ -99,7 +122,7 @@ public class ListAdapter extends BaseAdapter {
         public final TextView label_need;
         public final TextView label_to_win;
         public final TextView target;
-        public final TextView label_for;
+        public final TextView battingWickets;
         public final View separator1;
         public final View separator3;
         public final View separator4;
@@ -109,7 +132,7 @@ public class ListAdapter extends BaseAdapter {
             teamB = (TextView) view.findViewById(R.id.teamB);
             battingTeam = (TextView) view.findViewById(R.id.battingTeam);
             battingTeamScore = (TextView) view.findViewById(R.id.battingScore);
-            battingTeamWickets = (TextView) view.findViewById(R.id.battingWickets);
+            overs = (TextView) view.findViewById(R.id.overs);
             matchStatus = (TextView) view.findViewById(R.id.matchStatus);
             startingTime = (TextView) view.findViewById(R.id.startingTime);
             label_batsman = (TextView) view.findViewById(R.id.label_batsman);
@@ -120,7 +143,7 @@ public class ListAdapter extends BaseAdapter {
             label_need = (TextView) view.findViewById(R.id.label_need);
             label_to_win = (TextView) view.findViewById(R.id.label_to_win);
             target = (TextView) view.findViewById(R.id.target);
-            label_for = (TextView) view.findViewById(R.id.labelfor);
+            battingWickets = (TextView) view.findViewById(R.id.labelfor);
             separator1 = (View) view.findViewById(R.id.separator1);
             separator3 = (View) view.findViewById(R.id.separator3);
             separator4 = (View) view.findViewById(R.id.separator4);
@@ -130,8 +153,8 @@ public class ListAdapter extends BaseAdapter {
     public void setVisibility(ViewHolder mHolder, int visibility) {
         mHolder.battingTeam.setVisibility(visibility);
         mHolder.battingTeamScore.setVisibility(visibility);
-        mHolder.battingTeamWickets.setVisibility(visibility);
-        mHolder.label_for.setVisibility(visibility);
+        mHolder.overs.setVisibility(visibility);
+        mHolder.battingWickets.setVisibility(visibility);
         mHolder.label_batsman.setVisibility(visibility);
         mHolder.label_bowler.setVisibility(visibility);
         mHolder.batsman1.setVisibility(visibility);
@@ -143,5 +166,31 @@ public class ListAdapter extends BaseAdapter {
         mHolder.separator1.setVisibility(visibility);
         mHolder.separator3.setVisibility(visibility);
         mHolder.separator4.setVisibility(visibility);
+    }
+    public class IntTextViewAnimationController {
+        private final TextView mTextView;
+
+        public IntTextViewAnimationController(TextView textView) {
+            mTextView = textView;
+        }
+
+        public int getValue() {
+            try {
+                return Integer.parseInt(mTextView.getText().toString());
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+
+        public void setValue(int value) {
+            mTextView.setText(Integer.toString(value));
+        }
+
+        public void animateTo(int value) {
+            ObjectAnimator anim = ObjectAnimator.ofInt(this, "value", value);
+            anim.setInterpolator(new DecelerateInterpolator());
+            anim.setDuration(2000);
+            anim.start();
+        }
     }
 }
