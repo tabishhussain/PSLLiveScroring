@@ -265,6 +265,7 @@
                 android:layout_above="@id/separator2"
                 android:layout_toEndOf="@id/label_need"
                 android:layout_toRightOf="@id/label_need"
+                android:layout_below="@+id/bowler"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:text="122"

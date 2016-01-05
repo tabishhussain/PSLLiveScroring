@@ -82,8 +82,8 @@ public class MatchStatus {
         }
     }
 
-    public String getUrl(String id){
-        return "http://www.espncricinfo.com/ci/engine/match/"+id+".html";
+    public String getUrl(String id) {
+        return "http://www.espncricinfo.com/ci/engine/match/" + id + ".html";
     }
 
     public String getMatchOverStatement() {
@@ -228,7 +228,11 @@ public class MatchStatus {
             return matchOverStatement;
         } else {
             if (target != -1) {
-                return battingTeam + "required " + (target - getBattingTeamScore()) + " runs to win";
+                if (getBattingTeamScore() - target < 0) {
+                    return battingTeam + "required " + (target - getBattingTeamScore()) + " runs";
+                } else {
+                    return "2nd inning :" + battingTeam + "is batting at " + getBattingTeamScore();
+                }
             } else {
                 return "1st inning :" + battingTeam + "is batting at " + getBattingTeamScore();
             }
