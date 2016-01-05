@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ListFragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.android.tabishhussain.psllivescoring.DataClasses.CurrentData;
 import com.android.tabishhussain.psllivescoring.R;
@@ -67,6 +69,7 @@ public class MainFragment extends ListFragment {
                         .apply();
                 spinnerSelection = position;
                 view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ((TextView)view).setGravity(Gravity.RIGHT);
                 adapter.filterData(spinnerSelection);
             }
 
