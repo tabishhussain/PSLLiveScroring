@@ -1,12 +1,11 @@
 package com.android.tabishhussain.psllivescoring.adapters;
 
-import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -14,30 +13,52 @@ import com.android.tabishhussain.psllivescoring.DataClasses.CurrentData;
 import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
 import com.android.tabishhussain.psllivescoring.R;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
-/**
- * Created by tabish on 12/31/15.
- */
+
 public class ListAdapter extends BaseAdapter {
 
+    public static final String LOG_TAG = "Adapter";
     CurrentData mCurrentData = new CurrentData();
+    CurrentData mFilteredData = new CurrentData();
     Context context;
     ViewHolder mHolder;
+    List<String> countries;
 
     public ListAdapter(Context context) {
         this.context = context;
+        countries = new ArrayList<>();
+        try {
+            InputStream inputStream = context.getResources().openRawResource(
+                    context.getResources().getIdentifier("raw/internationalteams",
+                            "raw", context.getPackageName()));
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+                countries.add(line);
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getCount() {
-        return mCurrentData.AllMatchStatus.size();
+        return mFilteredData.AllMatchStatus.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mCurrentData.AllMatchStatus.get(position);
+        return mFilteredData.AllMatchStatus.get(position);
     }
 
     @Override
@@ -45,6 +66,7 @@ public class ListAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -54,14 +76,13 @@ public class ListAdapter extends BaseAdapter {
             convertView.setTag(mHolder);
         }
         mHolder = (ViewHolder) convertView.getTag();
-        MatchStatus matchStatus = mCurrentData.AllMatchStatus.get(position);
+        MatchStatus matchStatus = mFilteredData.AllMatchStatus.get(position);
         mHolder.teamA.setText(matchStatus.teamA);
         mHolder.teamB.setText(matchStatus.teamB);
-        if (!TextUtils.isEmpty(matchStatus.battingTeam)) {IntTextViewAnimationController amountAnim;
-            amountAnim = new IntTextViewAnimationController(mHolder.battingTeamScore);
-            amountAnim.animateTo(matchStatus.getBattingTeamScore());
+        if (!TextUtils.isEmpty(matchStatus.battingTeam)) {
+            mHolder.battingTeamScore.setText(matchStatus.getBattingTeamScore() + "");
             mHolder.overs.setText("->  In " + matchStatus.overs);
-            mHolder.battingTeam.setText(matchStatus.battingTeam + "is batting at");
+            mHolder.battingTeam.setText(matchStatus.battingTeam + context.getString(R.string.label_isbattingat));
             mHolder.matchStatus.setText(matchStatus.getMatchStatus());
             mHolder.batsman1.setText(matchStatus.batsman1);
             mHolder.batsman2.setText(matchStatus.batsman2);
@@ -80,7 +101,7 @@ public class ListAdapter extends BaseAdapter {
             setVisibility(mHolder, View.INVISIBLE);
             mHolder.startingTime.setText(matchStatus.de);
             mHolder.startingTime.setVisibility(View.VISIBLE);
-            mHolder.matchStatus.setText("Match not yet started");
+            mHolder.matchStatus.setText(R.string.msg_not_yet_started);
         }
         return convertView;
     }
@@ -88,7 +109,47 @@ public class ListAdapter extends BaseAdapter {
     public void setData(CurrentData currentData) {
         mCurrentData = currentData;
         Collections.sort(mCurrentData.AllMatchStatus, COMPARATOR);
+    }
+
+    public void filterData(int position) {
+        switch (position) {
+            case 0:
+                mFilteredData = mCurrentData;
+                break;
+            case 1:
+            case 3:
+                mFilteredData = new CurrentData();
+                for (MatchStatus matchStatus :
+                        mCurrentData.AllMatchStatus) {
+                    if ((TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 1)
+                            || (!TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 3)) {
+                        mFilteredData.AllMatchStatus.add(matchStatus);
+                    }
+                }
+                break;
+            case 2:
+            case 4:
+                mFilteredData = new CurrentData();
+                for (MatchStatus matchStatus :
+                        mCurrentData.AllMatchStatus) {
+                    if ((isInternationalMatch(matchStatus) && position == 4)
+                            || (!isInternationalMatch(matchStatus) && position == 2)) {
+                        mFilteredData.AllMatchStatus.add(matchStatus);
+                    }
+                }
+                break;
+        }
         notifyDataSetChanged();
+    }
+
+    public boolean isInternationalMatch(MatchStatus matchStatus) {
+        if (countries.size() != 0) {
+            if (countries.contains(matchStatus.teamA.trim().toLowerCase(Locale.US))
+                    || countries.contains(matchStatus.teamB.trim().toLowerCase(Locale.US))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -144,10 +205,11 @@ public class ListAdapter extends BaseAdapter {
             label_to_win = (TextView) view.findViewById(R.id.label_to_win);
             target = (TextView) view.findViewById(R.id.target);
             battingWickets = (TextView) view.findViewById(R.id.labelfor);
-            separator1 = (View) view.findViewById(R.id.separator1);
-            separator3 = (View) view.findViewById(R.id.separator3);
-            separator4 = (View) view.findViewById(R.id.separator4);
+            separator1 = view.findViewById(R.id.separator1);
+            separator3 = view.findViewById(R.id.separator3);
+            separator4 = view.findViewById(R.id.separator4);
         }
+
     }
 
     public void setVisibility(ViewHolder mHolder, int visibility) {
@@ -166,31 +228,5 @@ public class ListAdapter extends BaseAdapter {
         mHolder.separator1.setVisibility(visibility);
         mHolder.separator3.setVisibility(visibility);
         mHolder.separator4.setVisibility(visibility);
-    }
-    public class IntTextViewAnimationController {
-        private final TextView mTextView;
-
-        public IntTextViewAnimationController(TextView textView) {
-            mTextView = textView;
-        }
-
-        public int getValue() {
-            try {
-                return Integer.parseInt(mTextView.getText().toString());
-            } catch (Exception e) {
-                return 0;
-            }
-        }
-
-        public void setValue(int value) {
-            mTextView.setText(Integer.toString(value));
-        }
-
-        public void animateTo(int value) {
-            ObjectAnimator anim = ObjectAnimator.ofInt(this, "value", value);
-            anim.setInterpolator(new DecelerateInterpolator());
-            anim.setDuration(2000);
-            anim.start();
-        }
     }
 }

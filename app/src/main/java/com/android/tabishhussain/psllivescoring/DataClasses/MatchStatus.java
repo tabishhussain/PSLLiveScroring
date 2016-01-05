@@ -43,9 +43,11 @@ public class MatchStatus {
                 batsman1 = BBOInfo[1];
                 batsman2 = BBOInfo[2];
                 bowler = BBOInfo[3];
-            } else {
+            } else if(BBOInfo.length == 3) {
                 batsman1 = BBOInfo[1];
                 bowler = BBOInfo[2];
+            } else {
+                batsman1 = BBOInfo[1];
             }
             if (de.contains("Match over")) {
                 matchOverStatement = getMatchOverStatement();
@@ -71,13 +73,13 @@ public class MatchStatus {
                 target = -1;
                 break;
             case 2:
-                target = battingTeam.equals(teamA) ? teamBScore[0] + 1 : teamAScore[0] + 1;
+                target = teamA.equalsIgnoreCase(battingTeam) ? teamBScore[0] + 1 : teamAScore[0] + 1;
                 break;
             case 3:
                 target = -1;
                 break;
             case 4:
-                target = battingTeam.equals(teamA) ? teamBScore[1] + 1 : teamAScore[1] + 1;
+                target = teamA.equalsIgnoreCase(battingTeam) ? teamBScore[1] + 1 : teamAScore[1] + 1;
 
         }
     }
@@ -97,11 +99,11 @@ public class MatchStatus {
     }
 
     public String getBowlingTeam() {
-        return battingTeam.equalsIgnoreCase(teamA) ? teamB : teamA;
+        return teamA.equalsIgnoreCase(battingTeam) ? teamB : teamA;
     }
 
     public int getBowlingTeamScore() {
-        if (battingTeam.equalsIgnoreCase(teamA)) {
+        if (teamA.equalsIgnoreCase(battingTeam)) {
             return (teamBScore[1] != -1) ? teamBScore[1] : teamBScore[0];
         } else {
             return (teamAScore[1] != -1) ? teamAScore[1] : teamAScore[0];
@@ -109,7 +111,7 @@ public class MatchStatus {
     }
 
     public int getBowlingTeamWickets() {
-        if (battingTeam.equalsIgnoreCase(teamA)) {
+        if (teamA.equalsIgnoreCase(battingTeam)) {
             return (teamBWickets[1] != -1) ? teamBWickets[1] : teamBWickets[0];
         } else {
             return (teamAWickets[1] != -1) ? teamAWickets[1] : teamAWickets[0];
@@ -128,7 +130,7 @@ public class MatchStatus {
                 count = 0;
             }
             if (score.find()) {
-                if (battingTeam.equals(teamA)) {
+                if (teamA.equalsIgnoreCase(battingTeam)) {
                     if (score.group().contains("/")) {
                         teamAScore[count] = Integer.parseInt(score.group().split("/")[0]);
                         teamAWickets[count] = Integer.parseInt(score.group().split("/")[1]);
@@ -206,7 +208,7 @@ public class MatchStatus {
     }
 
     public int getBattingTeamScore() {
-        if (battingTeam.equalsIgnoreCase(teamA)) {
+        if (teamA.equalsIgnoreCase(battingTeam)) {
             return (teamAScore[1] != -1) ? teamAScore[1] : teamAScore[0];
         } else {
             return (teamBScore[1] != -1) ? teamBScore[1] : teamBScore[0];
@@ -214,7 +216,7 @@ public class MatchStatus {
     }
 
     public int getBattingTeamWickets() {
-        if (battingTeam.equalsIgnoreCase(teamA)) {
+        if (teamA.equalsIgnoreCase(battingTeam)) {
             return (teamAWickets[1] != -1) ? teamAWickets[1] : teamAWickets[0];
         } else {
             return (teamBWickets[1] != -1) ? teamBWickets[1] : teamBWickets[0];
@@ -231,6 +233,7 @@ public class MatchStatus {
                 if (getBattingTeamScore() - target < 0) {
                     return battingTeam + "required " + (target - getBattingTeamScore()) + " runs";
                 } else {
+                     target = -1;
                     return "2nd inning :" + battingTeam + "is batting at " + getBattingTeamScore();
                 }
             } else {

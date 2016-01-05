@@ -132,7 +132,7 @@
                 android:id="@+id/separator2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/overs"
+                android:layout_below="@+id/target"
                 android:layout_marginTop="4dp"
                 android:background="@android:color/holo_blue_bright" />
 
@@ -262,7 +262,6 @@
                 android:id="@+id/target"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/separator2"
                 android:layout_toEndOf="@id/label_need"
                 android:layout_toRightOf="@id/label_need"
                 android:layout_below="@+id/bowler"
