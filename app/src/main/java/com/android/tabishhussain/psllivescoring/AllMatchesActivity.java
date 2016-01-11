@@ -17,7 +17,9 @@ public class AllMatchesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_matches);
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        mToolbar.setTitle("PSL Live Scoring");
         setSupportActionBar(mToolbar);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction()
