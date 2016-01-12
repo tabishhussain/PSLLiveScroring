@@ -90,7 +90,7 @@ public class MatchStatus {
 //    }
 
     public String getMatchOverStatement() {
-        if (target > getBattingTeamScore()) {
+        if ((target - 1) > getBattingTeamScore()) {
             return "Match over : " + getBowlingTeam() + "won the match by " + (target - getBattingTeamScore()) + " runs";
         } else if (target <= getBattingTeamScore()) {
             return "Match over : " + battingTeam + "won the match by " + (10 - getBattingTeamWickets()) + " wickets";
