@@ -5,9 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,9 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.tabishhussain.psllivescoring.DataClasses.CurrentData;
+import com.android.tabishhussain.psllivescoring.ApiManager.CurrentData;
 import com.android.tabishhussain.psllivescoring.R;
-import com.android.tabishhussain.psllivescoring.ScoreUpdatingService;
+import com.android.tabishhussain.psllivescoring.services.ScoreUpdatingService;
 import com.android.tabishhussain.psllivescoring.adapters.ListAdapter;
 
 import static com.android.tabishhussain.psllivescoring.R.layout.layout_fragment;
@@ -32,16 +38,29 @@ public class MainFragment extends ListFragment {
     ListAdapter adapter;
     ProgressBar progressBar;
     int spinnerSelection;
-    String[] selectionArray;
     Spinner mSpinner;
     private boolean mServiceBound;
+    TextView errorView, clickHere;
     SharedPreferences sharedPreferences;
     private CurrentData.DataLoadListener mDataLoadListener = new CurrentData.DataLoadListener() {
         @Override
         public void onLoad(CurrentData currentData) {
             adapter.setData(currentData);
             adapter.filterData(spinnerSelection);
-            progressBar.setVisibility(View.INVISIBLE);
+            if (progressBar != null) {
+                progressBar.setVisibility(View.INVISIBLE);
+                errorView.setVisibility(View.INVISIBLE);
+                clickHere.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        public void onError() {
+            if (progressBar != null) {
+                Snackbar snackbar = Snackbar
+                        .make(progressBar, R.string.msg_connect_to_internet_for_update, Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
         }
     };
 
@@ -49,16 +68,10 @@ public class MainFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Toolbar mToolBar = (Toolbar) getActivity().findViewById(R.id.toolbar_actionbar);
         RelativeLayout rlToolBarMain = (RelativeLayout) mToolBar.findViewById(R.id.rlToolBarMain);
-        selectionArray = new String[]{
-                "All",
-                "Live",
-                "Others",
-                "Ended",
-                "International"
-        };
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         spinnerSelection = sharedPreferences.getInt(getActivity().getString(R.string.key_spinner_selection), 0);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.row_spinner_item, selectionArray);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.row_spinner_item, getResources().getStringArray(R.array.filter));
         mSpinner = new Spinner(getActivity());
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setSelection(spinnerSelection);
@@ -68,8 +81,9 @@ public class MainFragment extends ListFragment {
                 sharedPreferences.edit().putInt(getActivity().getString(R.string.key_spinner_selection), position)
                         .apply();
                 spinnerSelection = position;
-                view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                ((TextView)view).setGravity(Gravity.RIGHT);
+                view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                ((TextView) view).setGravity(Gravity.END);
+                ((TextView) view).setTextColor(ContextCompat.getColor(getActivity(),R.color.colorPrimaryDark));
                 adapter.filterData(spinnerSelection);
             }
 
@@ -83,14 +97,43 @@ public class MainFragment extends ListFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        errorView = (TextView) view.findViewById(R.id.error_msg);
+        clickHere = (TextView) view.findViewById(R.id.click_button);
+        clickHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
+            }
+        });
         progressBar.setVisibility(View.VISIBLE);
-        CurrentData.loadData(mDataLoadListener);
+        clickHere.setVisibility(View.INVISIBLE);
+        errorView.setVisibility(View.INVISIBLE);
+        if (isNetworkAvailable()) {
+            CurrentData.loadData(mDataLoadListener);
+        } else {
+            Handler mHandler = new Handler();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    errorView.setVisibility(View.VISIBLE);
+                    clickHere.setVisibility(View.VISIBLE);
+                }
+            }, 3000);
+        }
         adapter = new ListAdapter(getContext());
         getListView().setDividerHeight(0);
         setListAdapter(adapter);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
@@ -128,4 +171,27 @@ public class MainFragment extends ListFragment {
             mServiceBound = true;
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                progressBar.setVisibility(View.VISIBLE);
+                clickHere.setVisibility(View.INVISIBLE);
+                errorView.setVisibility(View.INVISIBLE);
+                if (isNetworkAvailable()) {
+                    CurrentData.loadData(mDataLoadListener);
+                } else {
+                    Handler mHandler = new Handler();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            errorView.setVisibility(View.VISIBLE);
+                            clickHere.setVisibility(View.VISIBLE);
+                        }
+                    }, 3000);
+                }
+        }
+    }
 }

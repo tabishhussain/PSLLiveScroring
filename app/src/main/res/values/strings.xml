@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">PSL Live Scoring</string>
+    <string name="app_name">CricScore</string>
     <string name="key_spinner_selection">selection</string>
     <string name="msg_not_yet_started">Match not yet started</string>
     <string name="label_isbattingat">is batting at</string>
+    <string name="msg_connect_to_internet_for_update">Please connect to internet for update</string>
+    <string name="msg_no_connection">No internet connection</string>
 </resources>

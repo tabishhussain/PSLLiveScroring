@@ -2,6 +2,7 @@ package com.android.tabishhussain.psllivescoring.DataClasses;
 
 /**
  * Created by Tabish Hussain on 12/24/2015.
+ * match basic info
  */
 public class MatchInfo {
     public String id;

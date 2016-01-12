@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
-    style="@style/ToolBarStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ToolBarStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
+    android:elevation="4dp"
     android:minHeight="@dimen/abc_action_bar_default_height_material">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ball" />
+
+    <TextView
+        android:id="@+id/apptitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:textSize="16sp"
+        android:text="Live Scoring"
+        android:textColor="@color/colorPrimaryDark" />
 
     <RelativeLayout
         android:id="@+id/rlToolBarMain"
-        android:layout_width="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="right|center_vertical" />
 
-    </RelativeLayout>
 </android.support.v7.widget.Toolbar>

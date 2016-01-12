@@ -6,5 +6,6 @@
     android:text="International"
     android:padding="8dp"
     android:textColor="@android:color/white"
-    android:background="@color/colorAccent">
+    android:background="@color/colorPrimaryDark"
+    >
 </TextView>

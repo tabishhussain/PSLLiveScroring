@@ -1,11 +1,13 @@
-package com.android.tabishhussain.psllivescoring.DataClasses;
+package com.android.tabishhussain.psllivescoring.ApiManager;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.tabishhussain.psllivescoring.AllMatchesActivity;
-import com.android.tabishhussain.psllivescoring.MatchStatusDeserializer;
+import com.android.tabishhussain.psllivescoring.DataClasses.MatchInfo;
+import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
+import com.android.tabishhussain.psllivescoring.gsonUtils.MatchStatusDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -19,23 +21,22 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Tabish Hussain on 12/24/2015.
+ * Api Manager Class
  */
 public class CurrentData {
 
     public List<MatchInfo> AllMatchInfo = new ArrayList<>();
     public List<MatchStatus> AllMatchStatus = new ArrayList<>();
-    public Date infoLastModification = new Date();
-    public Date statusLastModification = new Date();
-
     protected static CurrentData mCurrentData;
 
-    public static interface DataLoadListener {
-        public void onLoad(CurrentData currentData);
+    public interface DataLoadListener {
+        void onLoad(CurrentData currentData);
+
+        void onError();
     }
 
     public static void loadData(DataLoadListener listener) {
@@ -59,7 +60,7 @@ public class CurrentData {
                 urlConnection.setDoOutput(false);
                 InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuffer inputLine = new StringBuffer();
+                StringBuilder inputLine = new StringBuilder();
                 String line;
                 while ((line = bufferedReader.readLine()) != null)
                     inputLine.append(line);
@@ -118,7 +119,7 @@ public class CurrentData {
                 urlConnection.setDoOutput(false);
                 InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuffer inputLine = new StringBuffer();
+                StringBuilder inputLine = new StringBuilder();
                 String line;
                 while ((line = bufferedReader.readLine()) != null)
                     inputLine.append(line);
@@ -152,8 +153,6 @@ public class CurrentData {
         return "CurrentData{" +
                 "AllMatchInfo=" + AllMatchInfo +
                 ", AllMatchStatus=" + AllMatchStatus +
-                ", infoLastModification=" + infoLastModification +
-                ", statusLastModification=" + statusLastModification +
                 '}';
     }
 }

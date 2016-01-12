@@ -1,7 +1,8 @@
-package com.android.tabishhussain.psllivescoring;
+package com.android.tabishhussain.psllivescoring.gsonUtils;
 
 import android.util.Log;
 
+import com.android.tabishhussain.psllivescoring.AllMatchesActivity;
 import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -13,6 +14,7 @@ import java.lang.reflect.Type;
 
 /**
  * Created by Tabish Hussain on 12/24/2015.
+ * Deserializer for gson
  */
 public class MatchStatusDeserializer implements JsonDeserializer<MatchStatus> {
 

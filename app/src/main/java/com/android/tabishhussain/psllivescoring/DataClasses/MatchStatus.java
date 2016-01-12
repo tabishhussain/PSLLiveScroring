@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Tabish Hussain on 12/24/2015.
+ * All the calculation for a match is performed inside that class
  */
 public class MatchStatus {
 
@@ -31,7 +32,7 @@ public class MatchStatus {
     public String battingTeam = null;
     public String matchTypes = null;
     Pattern scorePattern = Pattern.compile("(\\d+/\\d+)|(\\d+)");
-    Pattern overPattern = Pattern.compile("\\d+\\.\\d{1}");
+    Pattern overPattern = Pattern.compile("\\d+\\.\\d");
 
 
     public void setPlayers(String de) {
@@ -84,14 +85,14 @@ public class MatchStatus {
         }
     }
 
-    public String getUrl(String id) {
-        return "http://www.espncricinfo.com/ci/engine/match/" + id + ".html";
-    }
+//    public String getUrl(String id) {
+//        return "http://www.espncricinfo.com/ci/engine/match/" + id + ".html";
+//    }
 
     public String getMatchOverStatement() {
         if (target > getBattingTeamScore()) {
             return "Match over : " + getBowlingTeam() + "won the match by " + (target - getBattingTeamScore()) + " runs";
-        } else if (target < getBattingTeamScore()) {
+        } else if (target <= getBattingTeamScore()) {
             return "Match over : " + battingTeam + "won the match by " + (10 - getBattingTeamWickets()) + " wickets";
         } else {
             return "Match Drawn";
@@ -102,21 +103,21 @@ public class MatchStatus {
         return teamA.equalsIgnoreCase(battingTeam) ? teamB : teamA;
     }
 
-    public int getBowlingTeamScore() {
-        if (teamA.equalsIgnoreCase(battingTeam)) {
-            return (teamBScore[1] != -1) ? teamBScore[1] : teamBScore[0];
-        } else {
-            return (teamAScore[1] != -1) ? teamAScore[1] : teamAScore[0];
-        }
-    }
-
-    public int getBowlingTeamWickets() {
-        if (teamA.equalsIgnoreCase(battingTeam)) {
-            return (teamBWickets[1] != -1) ? teamBWickets[1] : teamBWickets[0];
-        } else {
-            return (teamAWickets[1] != -1) ? teamAWickets[1] : teamAWickets[0];
-        }
-    }
+//    public int getBowlingTeamScore() {
+//        if (teamA.equalsIgnoreCase(battingTeam)) {
+//            return (teamBScore[1] != -1) ? teamBScore[1] : teamBScore[0];
+//        } else {
+//            return (teamAScore[1] != -1) ? teamAScore[1] : teamAScore[0];
+//        }
+//    }
+//
+//    public int getBowlingTeamWickets() {
+//        if (teamA.equalsIgnoreCase(battingTeam)) {
+//            return (teamBWickets[1] != -1) ? teamBWickets[1] : teamBWickets[0];
+//        } else {
+//            return (teamAWickets[1] != -1) ? teamAWickets[1] : teamAWickets[0];
+//        }
+//    }
 
     public void setMatchOvers(String de) {
         Matcher overMatcher = overPattern.matcher(de);
