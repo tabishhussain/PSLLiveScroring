@@ -5,4 +5,6 @@
     <string name="label_isbattingat">is batting at</string>
     <string name="msg_connect_to_internet_for_update">Please connect to internet for update</string>
     <string name="msg_no_connection">No internet connection</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="app_launch">appLaunch</string>
 </resources>

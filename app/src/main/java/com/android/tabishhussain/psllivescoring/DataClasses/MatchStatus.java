@@ -33,6 +33,7 @@ public class MatchStatus {
     public String matchTypes = null;
     Pattern scorePattern = Pattern.compile("(\\d+/\\d+)|(\\d+)");
     Pattern overPattern = Pattern.compile("\\d+\\.\\d");
+    Pattern under_agePattern = Pattern.compile("Under-\\d{2}s");
 
 
     public void setPlayers(String de) {
@@ -44,7 +45,7 @@ public class MatchStatus {
                 batsman1 = BBOInfo[1];
                 batsman2 = BBOInfo[2];
                 bowler = BBOInfo[3];
-            } else if(BBOInfo.length == 3) {
+            } else if (BBOInfo.length == 3) {
                 batsman1 = BBOInfo[1];
                 bowler = BBOInfo[2];
             } else {
@@ -130,7 +131,8 @@ public class MatchStatus {
             } else {
                 count = 0;
             }
-            if (score.find()) {
+            if (score.find() && !score.group().equalsIgnoreCase("19") &&
+                    !score.group().equalsIgnoreCase("17") && !score.group().equalsIgnoreCase("15")) {
                 if (teamA.equalsIgnoreCase(battingTeam)) {
                     if (score.group().contains("/")) {
                         teamAScore[count] = Integer.parseInt(score.group().split("/")[0]);
@@ -156,8 +158,22 @@ public class MatchStatus {
 
     public void setTeams(String si) {
         String teamsInfo[] = si.split("v");
-        Matcher teamAMatcher = scorePattern.matcher(teamsInfo[0]);
-        Matcher teamBMatcher = scorePattern.matcher(teamsInfo[1]);
+        Matcher teamAMatcher = under_agePattern.matcher(teamsInfo[0]);
+        Matcher teamBMatcher = under_agePattern.matcher(teamsInfo[1]);
+        String subNameA = "", subNameB = "";
+
+        if (teamAMatcher.find()) {
+            teamsInfo[0] = teamsInfo[0].replaceAll(teamAMatcher.group(), "");
+            subNameA = teamAMatcher.group();
+        }
+
+        if (teamBMatcher.find()) {
+            teamsInfo[1] = teamsInfo[1].replaceAll(teamBMatcher.group(), "");
+            subNameB = teamBMatcher.group();
+        }
+
+        teamAMatcher = scorePattern.matcher(teamsInfo[0]);
+        teamBMatcher = scorePattern.matcher(teamsInfo[1]);
         int count = 0;
         while (teamAMatcher.find() || teamBMatcher.find()) {
             count++;
@@ -200,6 +216,13 @@ public class MatchStatus {
             teamB = teamsInfo[1];
         }
 
+        if (!TextUtils.isEmpty(subNameA)) {
+            teamA = teamA.concat(subNameA);
+        }
+        if (!TextUtils.isEmpty(subNameB)) {
+            teamB = teamB.concat(subNameB);
+        }
+
         if (teamsInfo[0].contains("*")) {
             battingTeam = teamA;
         } else if (teamsInfo[1].contains("*")) {
@@ -234,7 +257,7 @@ public class MatchStatus {
                 if (getBattingTeamScore() - target < 0) {
                     return battingTeam + "required " + (target - getBattingTeamScore()) + " runs";
                 } else {
-                     target = -1;
+                    target = -1;
                     return "2nd inning :" + battingTeam + "is batting at " + getBattingTeamScore();
                 }
             } else {

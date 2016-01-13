@@ -27,17 +27,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.tabishhussain.psllivescoring.ApiManager.CurrentData;
+import com.android.tabishhussain.psllivescoring.Constants;
 import com.android.tabishhussain.psllivescoring.R;
-import com.android.tabishhussain.psllivescoring.services.ScoreUpdatingService;
 import com.android.tabishhussain.psllivescoring.adapters.ListAdapter;
+import com.android.tabishhussain.psllivescoring.services.ScoreUpdatingService;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import static com.android.tabishhussain.psllivescoring.R.layout.layout_fragment;
 
 public class MainFragment extends ListFragment {
 
     ListAdapter adapter;
+    InterstitialAd mInterstitialAd;
     ProgressBar progressBar;
     int spinnerSelection;
+    int adCount = 0;
     Spinner mSpinner;
     private boolean mServiceBound;
     TextView errorView, clickHere;
@@ -52,17 +58,47 @@ public class MainFragment extends ListFragment {
                 errorView.setVisibility(View.INVISIBLE);
                 clickHere.setVisibility(View.INVISIBLE);
             }
+            if(mInterstitialAd.isLoaded() && adCount >= 6
+                    && Constants.shouldShowAds){
+                mInterstitialAd.show();
+                adCount = 0;
+            } else {
+                adCount++;
+            }
         }
 
         @Override
         public void onError() {
             if (progressBar != null) {
                 Snackbar snackbar = Snackbar
-                        .make(progressBar, R.string.msg_connect_to_internet_for_update, Snackbar.LENGTH_LONG);
+                        .make(progressBar, R.string.msg_connect_to_internet_for_update,
+                                Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
         }
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                requestNewInterstitial();
+            }
+        });
+        requestNewInterstitial();
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .build();
+        mInterstitialAd.loadAd(adRequest);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +119,8 @@ public class MainFragment extends ListFragment {
                 spinnerSelection = position;
                 view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 ((TextView) view).setGravity(Gravity.END);
-                ((TextView) view).setTextColor(ContextCompat.getColor(getActivity(),R.color.colorPrimaryDark));
+                ((TextView) view).setTextColor(ContextCompat.
+                        getColor(getActivity(), R.color.colorPrimaryDark));
                 adapter.filterData(spinnerSelection);
             }
 
