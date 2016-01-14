@@ -7,4 +7,6 @@
     <string name="msg_no_connection">No internet connection</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="app_launch">appLaunch</string>
+    <string name="navigation_drawer_open">drawer_open</string>
+    <string name="navigation_drawer_close">drawer_closed</string>
 </resources>

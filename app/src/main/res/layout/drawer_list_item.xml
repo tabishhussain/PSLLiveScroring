@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="45dp"
+    android:textSize="16sp"
+    android:gravity="center_vertical"
+    android:text="International"
+    android:paddingLeft="20dp"
+    android:textColor="@android:color/white"
+    android:background="@color/colorPrimaryDark"
+    >
+</TextView>

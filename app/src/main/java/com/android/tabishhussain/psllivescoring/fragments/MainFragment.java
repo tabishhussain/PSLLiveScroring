@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -103,12 +102,11 @@ public class MainFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Toolbar mToolBar = (Toolbar) getActivity().findViewById(R.id.toolbar_actionbar);
-        RelativeLayout rlToolBarMain = (RelativeLayout) mToolBar.findViewById(R.id.rlToolBarMain);
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         spinnerSelection = sharedPreferences.getInt(getActivity().getString(R.string.key_spinner_selection), 0);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.row_spinner_item, getResources().getStringArray(R.array.filter));
-        mSpinner = new Spinner(getActivity());
+        mSpinner = (Spinner)mToolBar.findViewById(R.id.mSpinner);
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setSelection(spinnerSelection);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -129,7 +127,6 @@ public class MainFragment extends ListFragment {
 
             }
         });
-        rlToolBarMain.addView(mSpinner);
         return inflater.inflate(layout_fragment, null);
     }
 

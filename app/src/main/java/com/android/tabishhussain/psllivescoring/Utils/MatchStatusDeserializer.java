@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring.gsonUtils;
+package com.android.tabishhussain.psllivescoring.Utils;
 
 import android.util.Log;
 

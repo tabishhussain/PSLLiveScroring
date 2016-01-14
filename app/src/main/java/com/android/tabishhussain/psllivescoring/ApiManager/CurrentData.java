@@ -7,7 +7,7 @@ import android.util.Log;
 import com.android.tabishhussain.psllivescoring.AllMatchesActivity;
 import com.android.tabishhussain.psllivescoring.DataClasses.MatchInfo;
 import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
-import com.android.tabishhussain.psllivescoring.gsonUtils.MatchStatusDeserializer;
+import com.android.tabishhussain.psllivescoring.Utils.MatchStatusDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
