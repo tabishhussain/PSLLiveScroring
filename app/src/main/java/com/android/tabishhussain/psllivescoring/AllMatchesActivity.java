@@ -4,22 +4,28 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.tabishhussain.psllivescoring.fragments.MainFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -31,6 +37,9 @@ public class AllMatchesActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     Toolbar mToolbar;
     MainFragment mainFragment;
+    SharedPreferences sharedPreferences;
+    DrawerListAdapter mAdapter;
+    List<DrawerItem> drawerItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +50,15 @@ public class AllMatchesActivity extends AppCompatActivity {
         mToolbar.setTitleTextColor(getColor(R.color.colorPrimaryDark));
         setSupportActionBar(mToolbar);
         //noinspection ConstantConditions
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         int appLaunchCount = sharedPreferences.getInt(getString(R.string.app_launch), 0);
-        if(appLaunchCount > 15){
+        if (appLaunchCount > 15) {
             Constants.shouldShowAds = true;
         } else {
             appLaunchCount++;
             sharedPreferences.edit().putInt(getString(R.string.app_launch), appLaunchCount).apply();
         }
-        if(Constants.shouldShowAds) {
+        if (Constants.shouldShowAds) {
             AdView mAdView = (AdView) findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(getString(R.string.banner_ad_unit_id))
@@ -62,11 +71,11 @@ public class AllMatchesActivity extends AppCompatActivity {
                 GravityCompat.START);
         setDrawerProperties();
         mainFragment = new MainFragment();
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             Random randomBackGround = new Random();
             int back = randomBackGround.nextInt(4);
-            FrameLayout frameLayout = (FrameLayout)findViewById(R.id.frame);
-            switch (back){
+            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame);
+            switch (back) {
                 case 0:
                     frameLayout.setBackgroundResource(R.drawable.back1_blur);
                     break;
@@ -80,7 +89,7 @@ public class AllMatchesActivity extends AppCompatActivity {
                     frameLayout.setBackgroundResource(R.drawable.back4);
             }
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame,mainFragment).commit();
+                    .replace(R.id.frame, mainFragment).commit();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -105,7 +114,7 @@ public class AllMatchesActivity extends AppCompatActivity {
 
     private void setDrawerProperties() {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -120,15 +129,104 @@ public class AllMatchesActivity extends AppCompatActivity {
                 syncState();
             }
         };
+        int mActivePosition = sharedPreferences.getInt(getString(R.string.key_drawer_selection), 0);
+        drawerItems = new ArrayList<>();
+        String[] array = getResources().getStringArray(R.array.filter);
+        for (int i = 0; i < array.length; i++) {
+            if (i == mActivePosition) {
+                drawerItems.add(new DrawerItem(array[i], true));
+            } else {
+                drawerItems.add(new DrawerItem(array[i], false));
+            }
+        }
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, getResources().getStringArray(R.array.filter));
-        mDrawerList.setAdapter(arrayAdapter);
+        mAdapter = new DrawerListAdapter(drawerItems);
+        mDrawerList.setAdapter(mAdapter);
+//        mDrawerList.addHeaderView(LayoutInflater.from(this).inflate(R.layout.list_view_header,null));
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                sharedPreferences.edit().putInt(getString(R.string.key_drawer_selection), position)
+                        .commit();
+                view.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
+                        , R.color.colorPrimary));
+                ((TextView) view).setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                        , R.color.colorPrimaryDark));
+                for (int i = 0; i < parent.getChildCount(); i++) {
+                    if (i != position) {
+                        TextView v = (TextView) parent.getChildAt(i);
+                        v.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
+                                , R.color.colorPrimaryDark));
+                        v.setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                                , R.color.colorPrimary));
+                    }
+                }
+                mDrawerLayout.closeDrawers();
             }
         });
     }
+
+    public class DrawerListAdapter extends BaseAdapter {
+
+        List<DrawerItem> items;
+
+        public DrawerListAdapter(List<DrawerItem> items) {
+            this.items = items;
+        }
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getApplicationContext())
+                        .inflate(R.layout.drawer_list_item, null);
+                DrawerItem drawerItem = items.get(position);
+                if (drawerItem.isSelected) {
+                    ((TextView) convertView).setText(drawerItem.value);
+                    ((TextView) convertView).setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                            , R.color.colorPrimaryDark));
+                    convertView.setBackgroundColor(ContextCompat
+                            .getColor(AllMatchesActivity.this, R.color.colorPrimary));
+
+                } else {
+                    ((TextView) convertView).setText(drawerItem.value);
+                    ((TextView) convertView).setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                            , R.color.colorPrimary));
+                    convertView.setBackgroundColor(ContextCompat
+                            .getColor(AllMatchesActivity.this, R.color.colorPrimaryDark));
+                }
+            }
+            return convertView;
+        }
+
+        public void setData(List<DrawerItem> drawerItems) {
+            items = drawerItems;
+            notifyDataSetChanged();
+        }
+    }
+
+    public class DrawerItem {
+        public String value;
+        public Boolean isSelected;
+
+        public DrawerItem(String item, Boolean isSelected) {
+            this.value = item;
+            this.isSelected = isSelected;
+        }
+    }
+
 }

@@ -41,7 +41,7 @@ public class MainFragment extends ListFragment {
     ListAdapter adapter;
     InterstitialAd mInterstitialAd;
     ProgressBar progressBar;
-    int spinnerSelection;
+    int drawerSelection;
     int adCount = 0;
     Spinner mSpinner;
     private boolean mServiceBound;
@@ -51,19 +51,19 @@ public class MainFragment extends ListFragment {
         @Override
         public void onLoad(CurrentData currentData) {
             adapter.setData(currentData);
-            adapter.filterData(spinnerSelection);
+            drawerSelection = sharedPreferences.
+                    getInt(getActivity().getString(R.string.key_drawer_selection), 0);
+            adapter.TypeFilter(drawerSelection);
+            adapter.dayFilter(0);
+            mSpinner.setSelection(0);
             if (progressBar != null) {
                 progressBar.setVisibility(View.INVISIBLE);
                 errorView.setVisibility(View.INVISIBLE);
                 clickHere.setVisibility(View.INVISIBLE);
             }
-            if(mInterstitialAd.isLoaded() && adCount >= 6
-                    && Constants.shouldShowAds){
-                mInterstitialAd.show();
-                adCount = 0;
-            } else {
-                adCount++;
-            }
+            errorView.setText(R.string.msg_nothing_match);
+            getListView().setEmptyView(errorView);
+            showAd();
         }
 
         @Override
@@ -76,6 +76,24 @@ public class MainFragment extends ListFragment {
             }
         }
     };
+
+    public void showAd(){
+        if(mInterstitialAd.isLoaded() && adCount >= 6
+                && Constants.shouldShowAds){
+            mInterstitialAd.show();
+            adCount = 0;
+        } else {
+            adCount++;
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences.
+                registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,24 +120,19 @@ public class MainFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Toolbar mToolBar = (Toolbar) getActivity().findViewById(R.id.toolbar_actionbar);
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        spinnerSelection = sharedPreferences.getInt(getActivity().getString(R.string.key_spinner_selection), 0);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.row_spinner_item, getResources().getStringArray(R.array.filter));
+                R.layout.row_spinner_item, getResources().getStringArray(R.array.Spinnerfilter));
         mSpinner = (Spinner)mToolBar.findViewById(R.id.mSpinner);
         mSpinner.setAdapter(arrayAdapter);
-        mSpinner.setSelection(spinnerSelection);
+        mSpinner.setSelection(0);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sharedPreferences.edit().putInt(getActivity().getString(R.string.key_spinner_selection), position)
-                        .apply();
-                spinnerSelection = position;
                 view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 ((TextView) view).setGravity(Gravity.END);
                 ((TextView) view).setTextColor(ContextCompat.
                         getColor(getActivity(), R.color.colorPrimaryDark));
-                adapter.filterData(spinnerSelection);
+                adapter.dayFilter(position);
             }
 
             @Override
@@ -128,6 +141,25 @@ public class MainFragment extends ListFragment {
             }
         });
         return inflater.inflate(layout_fragment, null);
+    }
+
+    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =
+            new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if(key.equalsIgnoreCase(getActivity().getString(R.string.key_drawer_selection))){
+                adapter.TypeFilter(sharedPreferences.getInt(getActivity().
+                        getString(R.string.key_drawer_selection), 0));
+                adapter.dayFilter(0);
+            }
+        }
+    };
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        sharedPreferences
+                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
     }
 
     @Override
@@ -153,6 +185,7 @@ public class MainFragment extends ListFragment {
                 @Override
                 public void run() {
                     progressBar.setVisibility(View.INVISIBLE);
+                    errorView.setText(getString(R.string.msg_no_connection));
                     errorView.setVisibility(View.VISIBLE);
                     clickHere.setVisibility(View.VISIBLE);
                 }

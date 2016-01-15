@@ -248,6 +248,9 @@ public class MatchStatus {
     }
 
     public String getMatchStatus() {
+        if (TextUtils.isEmpty(battingTeam)){
+            return "Match not yet started";
+        }
         if (matchTypes.equalsIgnoreCase("test")) {
             return si;
         } else if (!TextUtils.isEmpty(matchOverStatement)) {

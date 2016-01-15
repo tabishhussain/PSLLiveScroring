@@ -85,8 +85,10 @@ public class CurrentData {
                 Type infoType = new TypeToken<List<MatchInfo>>() {
                 }.getType();
                 currentData.AllMatchInfo = gson.fromJson(result, infoType);
-                for (MatchInfo matchInfo : currentData.AllMatchInfo) {
-                    ids.add(matchInfo.id);
+                for (int i = 0; i < currentData.AllMatchInfo.size(); i++) {
+                    if (i < 25) {
+                        ids.add(currentData.AllMatchInfo.get(i).id);
+                    }
                 }
             }
             new GetMatchStatusTask(ids, currentData, listener).execute();

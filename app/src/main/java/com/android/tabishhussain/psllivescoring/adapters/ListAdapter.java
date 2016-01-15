@@ -28,7 +28,8 @@ import java.util.Locale;
 public class ListAdapter extends BaseAdapter {
 
     CurrentData mCurrentData = new CurrentData();
-    CurrentData mFilteredData = new CurrentData();
+    CurrentData mTypeFilteredData = new CurrentData();
+    CurrentData mDayFilteredData = new CurrentData();
     Context context;
     ViewHolder mHolder;
     List<String> countries;
@@ -53,12 +54,12 @@ public class ListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mFilteredData.AllMatchStatus.size();
+        return mDayFilteredData.AllMatchStatus.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mFilteredData.AllMatchStatus.get(position);
+        return mDayFilteredData.AllMatchStatus.get(position);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class ListAdapter extends BaseAdapter {
             convertView.setTag(mHolder);
         }
         mHolder = (ViewHolder) convertView.getTag();
-        MatchStatus matchStatus = mFilteredData.AllMatchStatus.get(position);
+        MatchStatus matchStatus = mDayFilteredData.AllMatchStatus.get(position);
         mHolder.teamA.setText(matchStatus.teamA);
         mHolder.teamB.setText(matchStatus.teamB);
         if (!TextUtils.isEmpty(matchStatus.battingTeam)) {
@@ -101,7 +102,7 @@ public class ListAdapter extends BaseAdapter {
             setVisibility(mHolder, View.INVISIBLE);
             mHolder.startingTime.setText(matchStatus.de);
             mHolder.startingTime.setVisibility(View.VISIBLE);
-            mHolder.matchStatus.setText(R.string.msg_not_yet_started);
+            mHolder.matchStatus.setText(matchStatus.getMatchStatus());
         }
         return convertView;
     }
@@ -116,33 +117,59 @@ public class ListAdapter extends BaseAdapter {
         Collections.sort(mCurrentData.AllMatchStatus, COMPARATOR);
     }
 
-    public void filterData(int position) {
+    public void TypeFilter(int position) {
         switch (position) {
             case 0:
-                mFilteredData = mCurrentData;
+                mTypeFilteredData = mCurrentData;
                 break;
             case 1:
-            case 3:
-                mFilteredData = new CurrentData();
+            case 4:
+                mTypeFilteredData = new CurrentData();
                 for (MatchStatus matchStatus :
                         mCurrentData.AllMatchStatus) {
                     if ((TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 1)
-                            || (!TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 3)) {
-                        mFilteredData.AllMatchStatus.add(matchStatus);
+                            || (!TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 4)) {
+                        mTypeFilteredData.AllMatchStatus.add(matchStatus);
                     }
                 }
                 break;
             case 2:
-            case 4:
-                mFilteredData = new CurrentData();
+            case 3:
+                mTypeFilteredData = new CurrentData();
                 for (MatchStatus matchStatus :
                         mCurrentData.AllMatchStatus) {
-                    if ((isInternationalMatch(matchStatus) && position == 4)
-                            || (!isInternationalMatch(matchStatus) && position == 2)) {
-                        mFilteredData.AllMatchStatus.add(matchStatus);
+                    if ((isInternationalMatch(matchStatus) && position == 2)
+                            || (!isInternationalMatch(matchStatus) && position == 3)) {
+                        mTypeFilteredData.AllMatchStatus.add(matchStatus);
                     }
                 }
                 break;
+        }
+        notifyDataSetChanged();
+    }
+
+    public void dayFilter(int position) {
+        switch (position) {
+            case 0:
+                mDayFilteredData = new CurrentData();
+                for (MatchStatus matchStatus : mTypeFilteredData.AllMatchStatus) {
+                    if (!matchStatus.getMatchStatus()
+                            .equalsIgnoreCase(context.getString(R.string.msg_not_yet_started))) {
+                        mDayFilteredData.AllMatchStatus.add(matchStatus);
+                    }
+                }
+                break;
+            case 1:
+                mDayFilteredData = new CurrentData();
+                for (MatchStatus matchStatus : mTypeFilteredData.AllMatchStatus) {
+                    if (matchStatus.getMatchStatus()
+                            .equalsIgnoreCase(context.getString(R.string.msg_not_yet_started))) {
+                        mDayFilteredData.AllMatchStatus.add(matchStatus);
+                    }
+                }
+                break;
+            case 2:
+                mDayFilteredData = mTypeFilteredData;
         }
         notifyDataSetChanged();
     }

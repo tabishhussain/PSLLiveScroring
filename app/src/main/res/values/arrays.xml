@@ -2,11 +2,17 @@
 <resources>
 
     <string-array name="filter">
-        <item>All</item>
-        <item>Live</item>
-        <item>Others</item>
-        <item>Ended</item>
+        <item>All Matches</item>
+        <item>Live Matches</item>
         <item>International</item>
+        <item>Domestic</item>
+        <item>Match Results</item>
+    </string-array>
+
+    <string-array name="Spinnerfilter">
+        <item>Today</item>
+        <item>Tomorrow | Break</item>
+        <item>Both</item>
     </string-array>
 
 </resources>
