@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,6 +45,8 @@ public class MainFragment extends ListFragment {
     int drawerSelection;
     int adCount = 0;
     Spinner mSpinner;
+    TextView title;
+    int mSpinnerSelection = 0;
     private boolean mServiceBound;
     TextView errorView, clickHere;
     SharedPreferences sharedPreferences;
@@ -54,8 +57,9 @@ public class MainFragment extends ListFragment {
             drawerSelection = sharedPreferences.
                     getInt(getActivity().getString(R.string.key_drawer_selection), 0);
             adapter.TypeFilter(drawerSelection);
-            adapter.dayFilter(0);
-            mSpinner.setSelection(0);
+            adapter.dayFilter(mSpinnerSelection);
+            mSpinner.setSelection(mSpinnerSelection);
+            setTitle(drawerSelection);
             if (progressBar != null) {
                 progressBar.setVisibility(View.INVISIBLE);
                 errorView.setVisibility(View.INVISIBLE);
@@ -122,6 +126,7 @@ public class MainFragment extends ListFragment {
         Toolbar mToolBar = (Toolbar) getActivity().findViewById(R.id.toolbar_actionbar);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.row_spinner_item, getResources().getStringArray(R.array.Spinnerfilter));
+        title = (TextView)mToolBar.findViewById(R.id.title1);
         mSpinner = (Spinner)mToolBar.findViewById(R.id.mSpinner);
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setSelection(0);
@@ -132,7 +137,8 @@ public class MainFragment extends ListFragment {
                 ((TextView) view).setGravity(Gravity.END);
                 ((TextView) view).setTextColor(ContextCompat.
                         getColor(getActivity(), R.color.colorPrimaryDark));
-                adapter.dayFilter(position);
+                mSpinnerSelection = position;
+                adapter.dayFilter(mSpinnerSelection);
             }
 
             @Override
@@ -148,12 +154,33 @@ public class MainFragment extends ListFragment {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if(key.equalsIgnoreCase(getActivity().getString(R.string.key_drawer_selection))){
-                adapter.TypeFilter(sharedPreferences.getInt(getActivity().
-                        getString(R.string.key_drawer_selection), 0));
-                adapter.dayFilter(0);
+                drawerSelection = sharedPreferences.
+                        getInt(getActivity().getString(R.string.key_drawer_selection), 0);
+                adapter.TypeFilter(drawerSelection);
+                adapter.dayFilter(mSpinnerSelection);
+                setTitle(drawerSelection);
             }
         }
     };
+
+    public  void setTitle(int drawerSelection){
+        switch (drawerSelection){
+            case 0:
+                title.setText("All Matches");
+                break;
+            case 1:
+                title.setText("Live Matches");
+                break;
+            case 2:
+                title.setText("International");
+                break;
+            case 3:
+                title.setText("Domestic Matches");
+                break;
+            case 4:
+                title.setText("Match Results");
+        }
+    }
 
     @Override
     public void onDetach() {
