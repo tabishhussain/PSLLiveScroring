@@ -92,7 +92,7 @@ public class MatchStatus {
 
     public String getMatchOverStatement() {
         if ((target - 1) > getBattingTeamScore()) {
-            return "Match over : " + getBowlingTeam() + "won the match by " + (target - getBattingTeamScore()) + " runs";
+            return "Match over : " + getBowlingTeam() + "won the match by " + (target - getBattingTeamScore() - 1) + " runs";
         } else if (target <= getBattingTeamScore()) {
             return "Match over : " + battingTeam + "won the match by " + (10 - getBattingTeamWickets()) + " wickets";
         } else {
@@ -217,10 +217,10 @@ public class MatchStatus {
         }
 
         if (!TextUtils.isEmpty(subNameA)) {
-            teamA = teamA.concat(subNameA);
+            teamA = teamA.concat(subNameA + " ");
         }
         if (!TextUtils.isEmpty(subNameB)) {
-            teamB = teamB.concat(subNameB);
+            teamB = teamB.concat(subNameB + " ");
         }
 
         if (teamsInfo[0].contains("*")) {
@@ -248,7 +248,7 @@ public class MatchStatus {
     }
 
     public String getMatchStatus() {
-        if (TextUtils.isEmpty(battingTeam)){
+        if (TextUtils.isEmpty(battingTeam)) {
             return "Match not yet started";
         }
         if (matchTypes.equalsIgnoreCase("test")) {
