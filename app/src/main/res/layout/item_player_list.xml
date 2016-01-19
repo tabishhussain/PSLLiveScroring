@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:id="@+id/thumbnail_container"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:foreground="@drawable/forground">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/pesh1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@+id/thumbnail_container"
+        android:layout_toRightOf="@id/thumbnail_container"
+        android:maxLines="1"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="Shahid Afridi"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/thumbnail_container"
+        android:layout_toRightOf="@id/thumbnail_container"
+        android:maxLines="3"
+        android:textColor="#FF544D4E"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="Played 50 T20Is matches with highest score of 111* and 90 wickets"
+        android:textStyle="italic" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/thumbnail_container"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/list_separator" />
+
+</RelativeLayout>
