@@ -1,14 +1,14 @@
 package com.android.tabishhussain.psllivescoring.fragments;
 
-import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,13 +26,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by tabish on 1/20/16.
+ * Display all the teams along with the team members and there portrait image
  */
-public class TeamsFragment extends ListFragment {
+public class TeamsFragment extends Fragment {
 
     public TeamsFragment() {
 
@@ -50,6 +50,13 @@ public class TeamsFragment extends ListFragment {
         for (int i = 0; i < images.length(); i++) {
             imageIds[i] = images.getResourceId(i, 0);
         }
+        images.recycle();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_teams, container);
     }
 
     @Override
@@ -59,66 +66,49 @@ public class TeamsFragment extends ListFragment {
         Type type = new TypeToken<List<PlayerInfo>>() {
         }.getType();
         List<PlayerInfo> playerInfoList = gson.fromJson(getTeamSquad(fileName), type);
-        PlayersListAdapter playersListAdapter = new PlayersListAdapter(getActivity(),
-                playerInfoList, imageIds);
-        getListView().setAdapter(playersListAdapter);
-        setListShown(true);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        MyRecyclerAdapter myRecyclerAdapter = new MyRecyclerAdapter(playerInfoList, imageIds);
+        recyclerView.setAdapter(myRecyclerAdapter);
     }
 
-    public class PlayersListAdapter extends BaseAdapter {
+    public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
+        private List<PlayerInfo> feedItemList;
+        private int[] imageIds;
 
-        List<PlayerInfo> teamMembers = new ArrayList<>();
-        int[] imageIds;
-        Context context;
-        ViewHolder viewHolder;
-
-        public PlayersListAdapter(Context context, List<PlayerInfo> teamMembers, int[] imageIds) {
-            this.teamMembers = teamMembers;
-            this.imageIds = imageIds;
-            this.context = context;
+        public MyRecyclerAdapter(List<PlayerInfo> feedItemList, int[] imageIDs) {
+            this.feedItemList = feedItemList;
+            this.imageIds = imageIDs;
         }
 
         @Override
-        public int getCount() {
-            return teamMembers.size();
+        public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View view = LayoutInflater.from(viewGroup.getContext()).
+                    inflate(R.layout.item_player_list, viewGroup);
+            return new MyViewHolder(view);
         }
 
         @Override
-        public Object getItem(int position) {
-            return teamMembers.get(position);
+        public void onBindViewHolder(MyViewHolder customViewHolder, int i) {
+            PlayerInfo feedItem = feedItemList.get(i);
+            customViewHolder.name.setText(feedItem.name);
+            customViewHolder.description.setText(feedItem.description);
+            customViewHolder.thumbnail.setImageResource(imageIds[i]);
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
+        public int getItemCount() {
+            return (null != feedItemList ? feedItemList.size() : 0);
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.item_player_list, null);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            }
-            viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.name.setText(teamMembers.get(position).name);
-            viewHolder.description.setText(teamMembers.get(position).description);
-            if (imageIds[position] != 0) {
-                viewHolder.thumbnail.setImageResource(imageIds[position]);
-            } else {
-                viewHolder.thumbnail.setImageResource(0);
-                viewHolder.thumbnail.setBackgroundColor(ContextCompat.
-                        getColor(getActivity(),android.R.color.black));
-            }
-            return convertView;
-        }
-
-        public class ViewHolder {
+        public class MyViewHolder extends RecyclerView.ViewHolder {
             public final TextView name;
             public final TextView description;
             public final ImageView thumbnail;
 
-            public ViewHolder(View view) {
+            public MyViewHolder(View view) {
+                super(view);
                 name = (TextView) view.findViewById(R.id.name);
                 description = (TextView) view.findViewById(R.id.description);
                 thumbnail = (ImageView) view.findViewById(R.id.thumbnail);

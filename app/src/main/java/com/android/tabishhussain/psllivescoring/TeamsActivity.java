@@ -17,24 +17,22 @@ import java.util.List;
 
 public class TeamsActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teams);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("PSL Teams");
         setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -76,11 +74,11 @@ public class TeamsActivity extends AppCompatActivity {
                 R.array.quetta_images);
         quettaFragment.setArguments(fragmentInfo);
 
-        adapter.addFragment(islamabadFragment, "ONE");
-        adapter.addFragment(karachiFragment, "TWO");
-        adapter.addFragment(lahoreFragment, "THREE");
-        adapter.addFragment(peshawarFragment, "FOUR");
-        adapter.addFragment(quettaFragment, "FIVE");
+        adapter.addFragment(islamabadFragment, " Islamabad \n United");
+        adapter.addFragment(karachiFragment, " Karachi \n Kings");
+        adapter.addFragment(lahoreFragment, "Lahore \n Qalandars");
+        adapter.addFragment(peshawarFragment, " Peshawar \n Zalmi");
+        adapter.addFragment(quettaFragment, "Quetta \n Gladiators");
         viewPager.setAdapter(adapter);
     }
 

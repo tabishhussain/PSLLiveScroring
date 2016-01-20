@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             app:tabGravity="fill"
             app:tabMode="scrollable"
+            android:textAlignment="center"
             app:tabSelectedTextColor="@color/colorPrimaryDark"
             app:tabTextColor="@color/tabUnselectedColor" />
     </android.support.design.widget.AppBarLayout>
@@ -30,6 +31,7 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
