@@ -1,6 +1,7 @@
 package com.android.tabishhussain.psllivescoring;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -146,6 +147,11 @@ public class AllMatchesActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 5){
+                    startActivity(new Intent(AllMatchesActivity.this, TeamsActivity.class));
+                    mDrawerLayout.closeDrawers();
+                    return;
+                }
                 sharedPreferences.edit().putInt(getString(R.string.key_drawer_selection), position)
                         .commit();
                 view.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this

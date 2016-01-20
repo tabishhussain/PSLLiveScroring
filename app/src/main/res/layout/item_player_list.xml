@@ -19,7 +19,8 @@
             android:id="@+id/thumbnail"
             android:layout_width="85dp"
             android:layout_height="match_parent"
-            android:background="@drawable/pesh1" />
+            android:scaleType="fitXY"
+            />
     </LinearLayout>
 
     <TextView

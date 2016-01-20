@@ -14,7 +14,6 @@ import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -53,6 +52,9 @@ public class MainFragment extends ListFragment {
     private CurrentData.DataLoadListener mDataLoadListener = new CurrentData.DataLoadListener() {
         @Override
         public void onLoad(CurrentData currentData) {
+            if(getActivity() == null){
+                return;
+            }
             adapter.setData(currentData);
             drawerSelection = sharedPreferences.
                     getInt(getActivity().getString(R.string.key_drawer_selection), 0);

@@ -7,6 +7,7 @@
         <item>International</item>
         <item>Domestic</item>
         <item>Match Results</item>
+        <item>PSL Teams</item>
     </string-array>
 
     <string-array name="Spinnerfilter">
@@ -14,5 +15,100 @@
         <item>Tomorrow | Break</item>
         <item>Both</item>
     </string-array>
+
+    <integer-array name="islamabad_images">
+        <item>@drawable/isl1</item>
+        <item>@drawable/isl2</item>
+        <item>@drawable/isl3</item>
+        <item>@drawable/isl4</item>
+        <item>@drawable/isl5</item>
+        <item>@drawable/isl6</item>
+        <item>@drawable/isl7</item>
+        <item>@drawable/isl8</item>
+        <item>@drawable/isl9</item>
+        <item>@drawable/isl10</item>
+        <item>0</item>
+        <item>@drawable/isl12</item>
+        <item>@drawable/isl13</item>
+        <item>@drawable/isl14</item>
+        <item>@drawable/isl15</item>
+        <item>0</item>
+    </integer-array>
+
+    <integer-array name="karachi_images">
+        <item>@drawable/kar1</item>
+        <item>@drawable/kar2</item>
+        <item>@drawable/kar3</item>
+        <item>@drawable/kar4</item>
+        <item>@drawable/kar5</item>
+        <item>@drawable/kar6</item>
+        <item>@drawable/kar7</item>
+        <item>@drawable/kar8</item>
+        <item>@drawable/kar9</item>
+        <item>@drawable/kar10</item>
+        <item>@drawable/kar11</item>
+        <item>@drawable/kar12</item>
+        <item>0</item>
+        <item>@drawable/kar14</item>
+        <item>@drawable/kar15</item>
+        <item>@drawable/kar16</item>
+    </integer-array>
+
+    <integer-array name="lahore_images">
+        <item>@drawable/lhr1</item>
+        <item>@drawable/lhr2</item>
+        <item>@drawable/lhr3</item>
+        <item>@drawable/lhr4</item>
+        <item>@drawable/lhr5</item>
+        <item>@drawable/lhr6</item>
+        <item>0</item>
+        <item>@drawable/lhr8</item>
+        <item>@drawable/lhr9</item>
+        <item>@drawable/lhr10</item>
+        <item>@drawable/lhr11</item>
+        <item>@drawable/lhr12</item>
+        <item>0</item>
+        <item>@drawable/lhr14</item>
+        <item>0</item>
+        <item>@drawable/lhr16</item>
+    </integer-array>
+
+    <integer-array name="peshawar_images">
+        <item>@drawable/pesh1</item>
+        <item>@drawable/pesh2</item>
+        <item>@drawable/pesh3</item>
+        <item>@drawable/pesh4</item>
+        <item>@drawable/pesh5</item>
+        <item>@drawable/pesh6</item>
+        <item>@drawable/pesh7</item>
+        <item>@drawable/pesh8</item>
+        <item>@drawable/pesh9</item>
+        <item>@drawable/pesh10</item>
+        <item>@drawable/pesh11</item>
+        <item>@drawable/pesh12</item>
+        <item>@drawable/pesh13</item>
+        <item>@drawable/pesh14</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+
+    <integer-array name="quetta_images">
+        <item>@drawable/que1</item>
+        <item>@drawable/que2</item>
+        <item>@drawable/que3</item>
+        <item>@drawable/que4</item>
+        <item>@drawable/que5</item>
+        <item>@drawable/que6</item>
+        <item>@drawable/que7</item>
+        <item>@drawable/que8</item>
+        <item>@drawable/que9</item>
+        <item>@drawable/que10</item>
+        <item>@drawable/que11</item>
+        <item>@drawable/que12</item>
+        <item>@drawable/que13</item>
+        <item>@drawable/que14</item>
+        <item>0</item>
+        <item>@drawable/que16</item>
+    </integer-array>
 
 </resources>
