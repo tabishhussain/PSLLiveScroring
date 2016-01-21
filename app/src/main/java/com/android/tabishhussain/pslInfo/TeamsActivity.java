@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring;
+package com.android.tabishhussain.pslInfo;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.android.tabishhussain.psllivescoring.fragments.TeamsFragment;
+import com.android.tabishhussain.pslInfo.fragments.TeamsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

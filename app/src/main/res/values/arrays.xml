@@ -2,12 +2,10 @@
 <resources>
 
     <string-array name="filter">
-        <item>All Matches</item>
         <item>Live Matches</item>
-        <item>International</item>
-        <item>Domestic</item>
         <item>Match Results</item>
         <item>PSL Teams</item>
+        <item>Upcoming Matches</item>
     </string-array>
 
     <string-array name="Spinnerfilter">

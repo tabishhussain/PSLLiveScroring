@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.android.tabishhussain.psllivescoring"
+        applicationId "com.android.tabishhussain.pslInfo"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1

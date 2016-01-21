@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring;
+package com.android.tabishhussain.pslInfo;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

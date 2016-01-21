@@ -1,13 +1,13 @@
-package com.android.tabishhussain.psllivescoring.ApiManager;
+package com.android.tabishhussain.pslInfo.ApiManager;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.tabishhussain.psllivescoring.AllMatchesActivity;
-import com.android.tabishhussain.psllivescoring.DataClasses.MatchInfo;
-import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
-import com.android.tabishhussain.psllivescoring.Utils.MatchStatusDeserializer;
+import com.android.tabishhussain.pslInfo.AllMatchesActivity;
+import com.android.tabishhussain.pslInfo.DataClasses.MatchInfo;
+import com.android.tabishhussain.pslInfo.DataClasses.MatchStatus;
+import com.android.tabishhussain.pslInfo.Utils.MatchStatusDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -36,7 +36,7 @@ public class CurrentData {
     public interface DataLoadListener {
         void onLoad(CurrentData currentData);
 
-        void onError();
+        void onError(String error);
     }
 
     public static void loadData(DataLoadListener listener) {
@@ -102,7 +102,8 @@ public class CurrentData {
         CurrentData currentData;
         DataLoadListener listener;
 
-        public GetMatchStatusTask(List<String> matchIds, CurrentData currentData, DataLoadListener listener) {
+        public GetMatchStatusTask(List<String> matchIds, CurrentData currentData
+                , DataLoadListener listener) {
             this.matchIds = matchIds;
             this.currentData = currentData;
             this.listener = listener;
@@ -129,6 +130,8 @@ public class CurrentData {
                 return inputLine.toString();
             } catch (IOException e) {
                 e.printStackTrace();
+                listener.onError("Sorry for the inconvenience :(\n" +
+                        "Server is under maintenance please try after a little while..");
             } finally {
                 urlConnection.disconnect();
             }
@@ -140,7 +143,8 @@ public class CurrentData {
             super.onPostExecute(result);
             if (!TextUtils.isEmpty(result)) {
                 Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(MatchStatus.class, new MatchStatusDeserializer()).create();
+                        .registerTypeAdapter(MatchStatus.class, new MatchStatusDeserializer())
+                        .create();
                 Type statusType = new TypeToken<List<MatchStatus>>() {
                 }.getType();
                 currentData.AllMatchStatus = gson.fromJson(result, statusType);

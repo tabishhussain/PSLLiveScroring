@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring.DataClasses;
+package com.android.tabishhussain.pslInfo.DataClasses;
 
 /**
  * Created by Tabish Hussain on 12/24/2015.

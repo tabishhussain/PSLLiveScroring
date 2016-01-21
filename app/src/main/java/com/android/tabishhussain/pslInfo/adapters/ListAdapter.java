@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring.adapters;
+package com.android.tabishhussain.pslInfo.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.tabishhussain.psllivescoring.ApiManager.CurrentData;
-import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
-import com.android.tabishhussain.psllivescoring.R;
+import com.android.tabishhussain.pslInfo.ApiManager.CurrentData;
+import com.android.tabishhussain.pslInfo.DataClasses.MatchStatus;
+import com.android.tabishhussain.pslInfo.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;

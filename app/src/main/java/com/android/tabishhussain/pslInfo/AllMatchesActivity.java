@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring;
+package com.android.tabishhussain.pslInfo;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +21,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.tabishhussain.psllivescoring.fragments.MainFragment;
+import com.android.tabishhussain.pslInfo.fragments.LiveScoringFragment;
+import com.android.tabishhussain.pslInfo.fragments.PslScheduleFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -37,7 +38,7 @@ public class AllMatchesActivity extends AppCompatActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     Toolbar mToolbar;
-    MainFragment mainFragment;
+    LiveScoringFragment liveScoringFragment;
     SharedPreferences sharedPreferences;
     DrawerListAdapter mAdapter;
     List<DrawerItem> drawerItems;
@@ -71,7 +72,7 @@ public class AllMatchesActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                 GravityCompat.START);
         setDrawerProperties();
-        mainFragment = new MainFragment();
+        liveScoringFragment = new LiveScoringFragment();
         if (savedInstanceState == null) {
             Random randomBackGround = new Random();
             int back = randomBackGround.nextInt(4);
@@ -90,7 +91,7 @@ public class AllMatchesActivity extends AppCompatActivity {
                     frameLayout.setBackgroundResource(R.drawable.back4);
             }
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame, mainFragment).commit();
+                    .replace(R.id.frame, new PslScheduleFragment()).commit();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -147,25 +148,31 @@ public class AllMatchesActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 5){
-                    startActivity(new Intent(AllMatchesActivity.this, TeamsActivity.class));
-                    mDrawerLayout.closeDrawers();
-                    return;
-                }
-                sharedPreferences.edit().putInt(getString(R.string.key_drawer_selection), position)
-                        .commit();
-                view.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
-                        , R.color.colorPrimary));
-                ((TextView) view).setTextColor(ContextCompat.getColor(AllMatchesActivity.this
-                        , R.color.colorPrimaryDark));
-                for (int i = 0; i < parent.getChildCount(); i++) {
-                    if (i != position) {
-                        TextView v = (TextView) parent.getChildAt(i);
-                        v.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
-                                , R.color.colorPrimaryDark));
-                        v.setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                switch (position) {
+                    case 2:
+                        startActivity(new Intent(AllMatchesActivity.this, TeamsActivity.class));
+                        break;
+                    case 3:
+                        getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                                .replace(R.id.frame, new PslScheduleFragment()).commit();
+                        break;
+                    default:
+                        sharedPreferences.edit().putInt(getString(R.string.key_drawer_selection), position)
+                                .commit();
+                        view.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
                                 , R.color.colorPrimary));
-                    }
+                        ((TextView) view).setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                                , R.color.colorPrimaryDark));
+                        for (int i = 0; i < parent.getChildCount(); i++) {
+                            if (i != position) {
+                                TextView v = (TextView) parent.getChildAt(i);
+                                v.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
+                                        , R.color.colorPrimaryDark));
+                                v.setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                                        , R.color.colorPrimary));
+                            }
+                        }
+
                 }
                 mDrawerLayout.closeDrawers();
             }

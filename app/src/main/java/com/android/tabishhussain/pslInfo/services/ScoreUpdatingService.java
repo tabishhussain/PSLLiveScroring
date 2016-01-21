@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring.services;
+package com.android.tabishhussain.pslInfo.services;
 
 import android.app.Service;
 import android.content.Context;
@@ -10,7 +10,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.android.tabishhussain.psllivescoring.ApiManager.CurrentData;
+import com.android.tabishhussain.pslInfo.ApiManager.CurrentData;
+import com.android.tabishhussain.pslInfo.R;
 
 /**
  * Created by tabish on 1/1/16.
@@ -46,12 +47,13 @@ public class ScoreUpdatingService extends Service {
             public void run() {
                 if (isNetworkAvailable()) {
                     CurrentData.loadData(mDataLoadListener);
-                    mHandler.postDelayed(this, 30000);
+                    mHandler.postDelayed(this, 180000);
                 } else {
-                    mDataLoadListener.onError();
+                    mDataLoadListener.onError(getApplicationContext().
+                            getString(R.string.msg_connect_to_internet_for_update));
                 }
             }
-        }, 30000);
+        }, 180000);
         return START_STICKY;
     }
 
@@ -61,7 +63,8 @@ public class ScoreUpdatingService extends Service {
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) getApplicationContext().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

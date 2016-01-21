@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring.fragments;
+package com.android.tabishhussain.pslInfo.fragments;
 
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.tabishhussain.psllivescoring.DataClasses.PlayerInfo;
-import com.android.tabishhussain.psllivescoring.R;
+import com.android.tabishhussain.pslInfo.DataClasses.PlayerInfo;
+import com.android.tabishhussain.pslInfo.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -56,7 +56,7 @@ public class TeamsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_teams, container);
+        return inflater.inflate(R.layout.fragment_teams, null);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class TeamsFragment extends Fragment {
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).
-                    inflate(R.layout.item_player_list, viewGroup);
+                    inflate(R.layout.item_player_list, null);
             return new MyViewHolder(view);
         }
 

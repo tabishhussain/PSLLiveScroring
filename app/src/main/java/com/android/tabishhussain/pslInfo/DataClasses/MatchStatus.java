@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring.DataClasses;
+package com.android.tabishhussain.pslInfo.DataClasses;
 
 import android.text.TextUtils;
 

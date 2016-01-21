@@ -1,9 +1,9 @@
-package com.android.tabishhussain.psllivescoring.Utils;
+package com.android.tabishhussain.pslInfo.Utils;
 
 import android.util.Log;
 
-import com.android.tabishhussain.psllivescoring.AllMatchesActivity;
-import com.android.tabishhussain.psllivescoring.DataClasses.MatchStatus;
+import com.android.tabishhussain.pslInfo.AllMatchesActivity;
+import com.android.tabishhussain.pslInfo.DataClasses.MatchStatus;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

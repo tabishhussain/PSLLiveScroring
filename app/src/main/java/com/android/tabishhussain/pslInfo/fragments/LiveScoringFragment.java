@@ -1,4 +1,4 @@
-package com.android.tabishhussain.psllivescoring.fragments;
+package com.android.tabishhussain.pslInfo.fragments;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,18 +25,18 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.tabishhussain.psllivescoring.ApiManager.CurrentData;
-import com.android.tabishhussain.psllivescoring.Constants;
-import com.android.tabishhussain.psllivescoring.R;
-import com.android.tabishhussain.psllivescoring.adapters.ListAdapter;
-import com.android.tabishhussain.psllivescoring.services.ScoreUpdatingService;
+import com.android.tabishhussain.pslInfo.ApiManager.CurrentData;
+import com.android.tabishhussain.pslInfo.Constants;
+import com.android.tabishhussain.pslInfo.R;
+import com.android.tabishhussain.pslInfo.adapters.ListAdapter;
+import com.android.tabishhussain.pslInfo.services.ScoreUpdatingService;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
-import static com.android.tabishhussain.psllivescoring.R.layout.layout_fragment;
+import static com.android.tabishhussain.pslInfo.R.layout.layout_fragment;
 
-public class MainFragment extends ListFragment {
+public class LiveScoringFragment extends ListFragment {
 
     ListAdapter adapter;
     InterstitialAd mInterstitialAd;
@@ -52,7 +52,7 @@ public class MainFragment extends ListFragment {
     private CurrentData.DataLoadListener mDataLoadListener = new CurrentData.DataLoadListener() {
         @Override
         public void onLoad(CurrentData currentData) {
-            if(getActivity() == null){
+            if (getActivity() == null) {
                 return;
             }
             adapter.setData(currentData);
@@ -73,19 +73,35 @@ public class MainFragment extends ListFragment {
         }
 
         @Override
-        public void onError() {
+        public void onError(String error) {
             if (progressBar != null) {
                 Snackbar snackbar = Snackbar
-                        .make(progressBar, R.string.msg_connect_to_internet_for_update,
+                        .make(progressBar, error,
                                 Snackbar.LENGTH_LONG);
                 snackbar.show();
+            }
+            if (!error.equalsIgnoreCase(getActivity().
+                    getString(R.string.msg_connect_to_internet_for_update))) {
+                adapter.setData(new CurrentData());
+                drawerSelection = sharedPreferences.
+                        getInt(getActivity().getString(R.string.key_drawer_selection), 0);
+                adapter.TypeFilter(drawerSelection);
+                adapter.dayFilter(mSpinnerSelection);
+                mSpinner.setSelection(mSpinnerSelection);
+                errorView.setText(error);
+                getListView().setEmptyView(errorView);
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    errorView.setVisibility(View.VISIBLE);
+                    clickHere.setVisibility(View.INVISIBLE);
+                }
             }
         }
     };
 
-    public void showAd(){
-        if(mInterstitialAd.isLoaded() && adCount >= 6
-                && Constants.shouldShowAds){
+    public void showAd() {
+        if (mInterstitialAd.isLoaded() && adCount >= 6
+                && Constants.shouldShowAds) {
             mInterstitialAd.show();
             adCount = 0;
         } else {
@@ -128,8 +144,8 @@ public class MainFragment extends ListFragment {
         Toolbar mToolBar = (Toolbar) getActivity().findViewById(R.id.toolbar_actionbar);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.row_spinner_item, getResources().getStringArray(R.array.Spinnerfilter));
-        title = (TextView)mToolBar.findViewById(R.id.title1);
-        mSpinner = (Spinner)mToolBar.findViewById(R.id.mSpinner);
+        title = (TextView) mToolBar.findViewById(R.id.title1);
+        mSpinner = (Spinner) mToolBar.findViewById(R.id.mSpinner);
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setSelection(0);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -153,20 +169,20 @@ public class MainFragment extends ListFragment {
 
     private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equalsIgnoreCase(getActivity().getString(R.string.key_drawer_selection))){
-                drawerSelection = sharedPreferences.
-                        getInt(getActivity().getString(R.string.key_drawer_selection), 0);
-                adapter.TypeFilter(drawerSelection);
-                adapter.dayFilter(mSpinnerSelection);
-                setTitle(drawerSelection);
-            }
-        }
-    };
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                    if (key.equalsIgnoreCase(getActivity().getString(R.string.key_drawer_selection))) {
+                        drawerSelection = sharedPreferences.
+                                getInt(getActivity().getString(R.string.key_drawer_selection), 0);
+                        adapter.TypeFilter(drawerSelection);
+                        adapter.dayFilter(mSpinnerSelection);
+                        setTitle(drawerSelection);
+                    }
+                }
+            };
 
-    public  void setTitle(int drawerSelection){
-        switch (drawerSelection){
+    public void setTitle(int drawerSelection) {
+        switch (drawerSelection) {
             case 0:
                 title.setText("All Matches");
                 break;
