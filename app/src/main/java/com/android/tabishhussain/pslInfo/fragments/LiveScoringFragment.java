@@ -13,13 +13,10 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ListFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -45,7 +42,6 @@ public class LiveScoringFragment extends ListFragment {
     int adCount = 0;
     Spinner mSpinner;
     TextView title;
-    int mSpinnerSelection = 0;
     private boolean mServiceBound;
     TextView errorView, clickHere;
     SharedPreferences sharedPreferences;
@@ -56,12 +52,8 @@ public class LiveScoringFragment extends ListFragment {
                 return;
             }
             adapter.setData(currentData);
-            drawerSelection = sharedPreferences.
-                    getInt(getActivity().getString(R.string.key_drawer_selection), 0);
-            adapter.TypeFilter(drawerSelection);
-            adapter.dayFilter(mSpinnerSelection);
-            mSpinner.setSelection(mSpinnerSelection);
-            setTitle(drawerSelection);
+            adapter.TypeFilter(0);
+            setTitle(0);
             if (progressBar != null) {
                 progressBar.setVisibility(View.INVISIBLE);
                 errorView.setVisibility(View.INVISIBLE);
@@ -74,27 +66,24 @@ public class LiveScoringFragment extends ListFragment {
 
         @Override
         public void onError(String error) {
-            if (progressBar != null) {
-                Snackbar snackbar = Snackbar
-                        .make(progressBar, error,
-                                Snackbar.LENGTH_LONG);
-                snackbar.show();
+            if (getActivity() == null) {
+                return;
             }
             if (!error.equalsIgnoreCase(getActivity().
                     getString(R.string.msg_connect_to_internet_for_update))) {
                 adapter.setData(new CurrentData());
-                drawerSelection = sharedPreferences.
-                        getInt(getActivity().getString(R.string.key_drawer_selection), 0);
-                adapter.TypeFilter(drawerSelection);
-                adapter.dayFilter(mSpinnerSelection);
-                mSpinner.setSelection(mSpinnerSelection);
+                adapter.TypeFilter(0);
                 errorView.setText(error);
-                getListView().setEmptyView(errorView);
                 if (progressBar != null) {
                     progressBar.setVisibility(View.INVISIBLE);
                     errorView.setVisibility(View.VISIBLE);
                     clickHere.setVisibility(View.INVISIBLE);
                 }
+            } else if (progressBar != null) {
+                Snackbar snackbar = Snackbar
+                        .make(progressBar, error,
+                                Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
         }
     };
@@ -109,13 +98,13 @@ public class LiveScoringFragment extends ListFragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        sharedPreferences.
-                registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+//        sharedPreferences.
+//                registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,45 +135,28 @@ public class LiveScoringFragment extends ListFragment {
                 R.layout.row_spinner_item, getResources().getStringArray(R.array.Spinnerfilter));
         title = (TextView) mToolBar.findViewById(R.id.title1);
         mSpinner = (Spinner) mToolBar.findViewById(R.id.mSpinner);
-        mSpinner.setAdapter(arrayAdapter);
-        mSpinner.setSelection(0);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-                ((TextView) view).setGravity(Gravity.END);
-                ((TextView) view).setTextColor(ContextCompat.
-                        getColor(getActivity(), R.color.colorPrimaryDark));
-                mSpinnerSelection = position;
-                adapter.dayFilter(mSpinnerSelection);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        mSpinner.setVisibility(View.INVISIBLE);
         return inflater.inflate(layout_fragment, null);
     }
 
-    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =
-            new SharedPreferences.OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                    if (key.equalsIgnoreCase(getActivity().getString(R.string.key_drawer_selection))) {
-                        drawerSelection = sharedPreferences.
-                                getInt(getActivity().getString(R.string.key_drawer_selection), 0);
-                        adapter.TypeFilter(drawerSelection);
-                        adapter.dayFilter(mSpinnerSelection);
-                        setTitle(drawerSelection);
-                    }
-                }
-            };
+//    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =
+//            new SharedPreferences.OnSharedPreferenceChangeListener() {
+//                @Override
+//                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//                    if (key.equalsIgnoreCase(getActivity().getString(R.string.key_drawer_selection))) {
+//                        drawerSelection = sharedPreferences.
+//                                getInt(getActivity().getString(R.string.key_drawer_selection), 0);
+//                        adapter.TypeFilter(drawerSelection);
+//                        adapter.dayFilter(mSpinnerSelection);
+//                        setTitle(drawerSelection);
+//                    }
+//                }
+//            };
 
     public void setTitle(int drawerSelection) {
         switch (drawerSelection) {
             case 0:
-                title.setText("All Matches");
+                title.setText("Live");
                 break;
             case 1:
                 title.setText("Live Matches");
@@ -193,19 +165,19 @@ public class LiveScoringFragment extends ListFragment {
                 title.setText("International");
                 break;
             case 3:
-                title.setText("Domestic Matches");
+                title.setText("So far PSL");
                 break;
             case 4:
                 title.setText("Match Results");
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        sharedPreferences
-                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        sharedPreferences
+//                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+//    }
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -219,6 +191,7 @@ public class LiveScoringFragment extends ListFragment {
                 startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
             }
         });
+        adapter = new ListAdapter(getContext());
         progressBar.setVisibility(View.VISIBLE);
         clickHere.setVisibility(View.INVISIBLE);
         errorView.setVisibility(View.INVISIBLE);
@@ -236,7 +209,6 @@ public class LiveScoringFragment extends ListFragment {
                 }
             }, 3000);
         }
-        adapter = new ListAdapter(getContext());
         getListView().setDividerHeight(0);
         setListAdapter(adapter);
     }

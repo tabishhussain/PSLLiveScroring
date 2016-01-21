@@ -130,8 +130,6 @@ public class CurrentData {
                 return inputLine.toString();
             } catch (IOException e) {
                 e.printStackTrace();
-                listener.onError("Sorry for the inconvenience :(\n" +
-                        "Server is under maintenance please try after a little while..");
             } finally {
                 urlConnection.disconnect();
             }
@@ -150,6 +148,9 @@ public class CurrentData {
                 currentData.AllMatchStatus = gson.fromJson(result, statusType);
                 mCurrentData = currentData;
                 listener.onLoad(mCurrentData);
+            } else {
+                listener.onError("Sorry for the inconvenience :(\n" +
+                        "Server is under maintenance please try later..");
             }
         }
     }

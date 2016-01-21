@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -91,7 +92,7 @@ public class AllMatchesActivity extends AppCompatActivity {
                     frameLayout.setBackgroundResource(R.drawable.back4);
             }
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame, new PslScheduleFragment()).commit();
+                    .replace(R.id.frame, liveScoringFragment).commit();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -131,11 +132,10 @@ public class AllMatchesActivity extends AppCompatActivity {
                 syncState();
             }
         };
-        int mActivePosition = sharedPreferences.getInt(getString(R.string.key_drawer_selection), 0);
         drawerItems = new ArrayList<>();
         String[] array = getResources().getStringArray(R.array.filter);
         for (int i = 0; i < array.length; i++) {
-            if (i == mActivePosition) {
+            if (i == 0) {
                 drawerItems.add(new DrawerItem(array[i], true));
             } else {
                 drawerItems.add(new DrawerItem(array[i], false));
@@ -144,35 +144,40 @@ public class AllMatchesActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mAdapter = new DrawerListAdapter(drawerItems);
         mDrawerList.setAdapter(mAdapter);
-//        mDrawerList.addHeaderView(LayoutInflater.from(this).inflate(R.layout.list_view_header,null));
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 2:
-                        startActivity(new Intent(AllMatchesActivity.this, TeamsActivity.class));
-                        break;
-                    case 3:
-                        getSupportFragmentManager().beginTransaction().addToBackStack(null)
-                                .replace(R.id.frame, new PslScheduleFragment()).commit();
-                        break;
-                    default:
-                        sharedPreferences.edit().putInt(getString(R.string.key_drawer_selection), position)
-                                .commit();
-                        view.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
-                                , R.color.colorPrimary));
-                        ((TextView) view).setTextColor(ContextCompat.getColor(AllMatchesActivity.this
-                                , R.color.colorPrimaryDark));
-                        for (int i = 0; i < parent.getChildCount(); i++) {
-                            if (i != position) {
-                                TextView v = (TextView) parent.getChildAt(i);
-                                v.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
-                                        , R.color.colorPrimaryDark));
-                                v.setTextColor(ContextCompat.getColor(AllMatchesActivity.this
-                                        , R.color.colorPrimary));
-                            }
+                final int pos = position;
+                Handler mHandler =  new Handler();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (pos) {
+                            case 1:
+                                startActivityForResult(new Intent(AllMatchesActivity.this, TeamsActivity.class), 0);
+                                break;
+                            case 2:
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.frame, new PslScheduleFragment()).commit();
+                                break;
+                            case 0:
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.frame, liveScoringFragment).commit();
                         }
-
+                    }
+                },250);
+                view.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
+                        , R.color.colorPrimary));
+                ((TextView) view).setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                        , R.color.colorPrimaryDark));
+                for (int i = 0; i < parent.getChildCount(); i++) {
+                    if (i != position) {
+                        TextView v = (TextView) parent.getChildAt(i);
+                        v.setBackgroundColor(ContextCompat.getColor(AllMatchesActivity.this
+                                , R.color.colorPrimaryDark));
+                        v.setTextColor(ContextCompat.getColor(AllMatchesActivity.this
+                                , R.color.colorPrimary));
+                    }
                 }
                 mDrawerLayout.closeDrawers();
             }
@@ -242,4 +247,14 @@ public class AllMatchesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 0:
+                if(resultCode == RESULT_OK){
+                    mDrawerList.setSelection(0);
+                }
+        }
+    }
 }

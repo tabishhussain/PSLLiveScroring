@@ -120,30 +120,29 @@ public class ListAdapter extends BaseAdapter {
     public void TypeFilter(int position) {
         switch (position) {
             case 0:
-                mTypeFilteredData = mCurrentData;
-                break;
-            case 1:
-            case 4:
-                mTypeFilteredData = new CurrentData();
-                for (MatchStatus matchStatus :
-                        mCurrentData.AllMatchStatus) {
-                    if ((TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 1)
-                            || (!TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 4)) {
-                        mTypeFilteredData.AllMatchStatus.add(matchStatus);
-                    }
-                }
-                break;
-            case 2:
             case 3:
                 mTypeFilteredData = new CurrentData();
                 for (MatchStatus matchStatus :
                         mCurrentData.AllMatchStatus) {
-                    if ((isInternationalMatch(matchStatus) && position == 2)
-                            || (!isInternationalMatch(matchStatus) && position == 3)) {
+                    if ((!TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 3)
+                            ||(TextUtils.isEmpty(matchStatus.matchOverStatement) && position == 0)) {
                         mTypeFilteredData.AllMatchStatus.add(matchStatus);
                     }
                 }
+                dayFilter(2);
                 break;
+//            case 2:
+
+//            case 3:
+//                mTypeFilteredData = new CurrentData();
+//                for (MatchStatus matchStatus :
+//                        mCurrentData.AllMatchStatus) {
+//                    if ((isInternationalMatch(matchStatus) && position == 2)
+//                            || (!isInternationalMatch(matchStatus) && position == 3)) {
+//                        mTypeFilteredData.AllMatchStatus.add(matchStatus);
+//                    }
+//                }
+//                break;
         }
         notifyDataSetChanged();
     }

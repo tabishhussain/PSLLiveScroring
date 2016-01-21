@@ -3,15 +3,18 @@
 
     <string-array name="filter">
         <item>Live Matches</item>
-        <item>Match Results</item>
         <item>PSL Teams</item>
         <item>Upcoming Matches</item>
+        <item>Match Results</item>
     </string-array>
 
     <string-array name="Spinnerfilter">
-        <item>Today</item>
-        <item>Tomorrow | Break</item>
-        <item>Both</item>
+        <item>All</item>
+        <item>Lahore</item>
+        <item>Karachi</item>
+        <item>Quetta</item>
+        <item>Peshawar</item>
+        <item>Islamabad</item>
     </string-array>
 
     <integer-array name="islamabad_images">

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CricScore</string>
+    <string name="app_name">PSL</string>
     <string name="key_drawer_selection">selection</string>
     <string name="msg_not_yet_started">Match not yet started</string>
     <string name="label_isbattingat">is batting at</string>
