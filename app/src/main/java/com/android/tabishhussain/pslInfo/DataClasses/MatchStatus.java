@@ -288,6 +288,7 @@ public class MatchStatus {
                 ", matchTimming='" + matchTimming + '\'' +
                 ", battingTeam='" + battingTeam + '\'' +
                 ", matchTypes='" + matchTypes + '\'' +
+                ", Id" + id +
                 '}';
     }
 }

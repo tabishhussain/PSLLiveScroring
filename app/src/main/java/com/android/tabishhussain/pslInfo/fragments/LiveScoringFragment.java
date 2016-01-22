@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -25,7 +24,8 @@ import android.widget.TextView;
 import com.android.tabishhussain.pslInfo.ApiManager.CurrentData;
 import com.android.tabishhussain.pslInfo.Constants;
 import com.android.tabishhussain.pslInfo.R;
-import com.android.tabishhussain.pslInfo.adapters.ListAdapter;
+import com.android.tabishhussain.pslInfo.adapters.JsonDataListAdapter;
+import com.android.tabishhussain.pslInfo.adapters.XmlDataListAdapter;
 import com.android.tabishhussain.pslInfo.services.ScoreUpdatingService;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -35,25 +35,32 @@ import static com.android.tabishhussain.pslInfo.R.layout.layout_fragment;
 
 public class LiveScoringFragment extends ListFragment {
 
-    ListAdapter adapter;
+    JsonDataListAdapter mJsonAdapter;
+    XmlDataListAdapter xmlListAdapter;
     InterstitialAd mInterstitialAd;
     ProgressBar progressBar;
-    int drawerSelection;
     int adCount = 0;
     Spinner mSpinner;
     TextView title;
     private boolean mServiceBound;
     TextView errorView, clickHere;
-    SharedPreferences sharedPreferences;
     private CurrentData.DataLoadListener mDataLoadListener = new CurrentData.DataLoadListener() {
         @Override
-        public void onLoad(CurrentData currentData) {
+        public void onLoad(CurrentData currentData, boolean isJson) {
             if (getActivity() == null) {
                 return;
             }
-            adapter.setData(currentData);
-            adapter.TypeFilter(0);
-            setTitle(0);
+            if(isJson) {
+                mJsonAdapter.setData(currentData);
+                mJsonAdapter.TypeFilter(0);
+                setTitle(0);
+                getListView().setAdapter(mJsonAdapter);
+            } else {
+                xmlListAdapter.setData(currentData);
+                xmlListAdapter.TypeFilter(0);
+                setTitle(0);
+                getListView().setAdapter(xmlListAdapter);
+            }
             if (progressBar != null) {
                 progressBar.setVisibility(View.INVISIBLE);
                 errorView.setVisibility(View.INVISIBLE);
@@ -71,8 +78,8 @@ public class LiveScoringFragment extends ListFragment {
             }
             if (!error.equalsIgnoreCase(getActivity().
                     getString(R.string.msg_connect_to_internet_for_update))) {
-                adapter.setData(new CurrentData());
-                adapter.TypeFilter(0);
+                mJsonAdapter.setData(new CurrentData());
+                mJsonAdapter.TypeFilter(0);
                 errorView.setText(error);
                 if (progressBar != null) {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -146,8 +153,8 @@ public class LiveScoringFragment extends ListFragment {
 //                    if (key.equalsIgnoreCase(getActivity().getString(R.string.key_drawer_selection))) {
 //                        drawerSelection = sharedPreferences.
 //                                getInt(getActivity().getString(R.string.key_drawer_selection), 0);
-//                        adapter.TypeFilter(drawerSelection);
-//                        adapter.dayFilter(mSpinnerSelection);
+//                        mJsonAdapter.TypeFilter(drawerSelection);
+//                        mJsonAdapter.dayFilter(mSpinnerSelection);
 //                        setTitle(drawerSelection);
 //                    }
 //                }
@@ -191,12 +198,13 @@ public class LiveScoringFragment extends ListFragment {
                 startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
             }
         });
-        adapter = new ListAdapter(getContext());
+        mJsonAdapter = new JsonDataListAdapter(getContext());
+        xmlListAdapter =  new XmlDataListAdapter(getContext());
         progressBar.setVisibility(View.VISIBLE);
         clickHere.setVisibility(View.INVISIBLE);
         errorView.setVisibility(View.INVISIBLE);
         if (isNetworkAvailable()) {
-            CurrentData.loadData(mDataLoadListener);
+            CurrentData.loadData(getActivity(),mDataLoadListener);
         } else {
             Handler mHandler = new Handler();
             mHandler.postDelayed(new Runnable() {
@@ -210,7 +218,6 @@ public class LiveScoringFragment extends ListFragment {
             }, 3000);
         }
         getListView().setDividerHeight(0);
-        setListAdapter(adapter);
     }
 
     private boolean isNetworkAvailable() {
@@ -264,7 +271,7 @@ public class LiveScoringFragment extends ListFragment {
                 clickHere.setVisibility(View.INVISIBLE);
                 errorView.setVisibility(View.INVISIBLE);
                 if (isNetworkAvailable()) {
-                    CurrentData.loadData(mDataLoadListener);
+                    CurrentData.loadData(getActivity(), mDataLoadListener);
                 } else {
                     Handler mHandler = new Handler();
                     mHandler.postDelayed(new Runnable() {

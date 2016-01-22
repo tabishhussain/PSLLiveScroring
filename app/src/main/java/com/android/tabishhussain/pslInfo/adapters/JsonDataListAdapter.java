@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class ListAdapter extends BaseAdapter {
+public class JsonDataListAdapter extends BaseAdapter {
 
     CurrentData mCurrentData = new CurrentData();
     CurrentData mTypeFilteredData = new CurrentData();
@@ -34,7 +34,7 @@ public class ListAdapter extends BaseAdapter {
     ViewHolder mHolder;
     List<String> countries;
 
-    public ListAdapter(Context context) {
+    public JsonDataListAdapter(Context context) {
         this.context = context;
         countries = new ArrayList<>();
         try {
@@ -137,8 +137,8 @@ public class ListAdapter extends BaseAdapter {
 //                mTypeFilteredData = new CurrentData();
 //                for (MatchStatus matchStatus :
 //                        mCurrentData.AllMatchStatus) {
-//                    if ((isInternationalMatch(matchStatus) && position == 2)
-//                            || (!isInternationalMatch(matchStatus) && position == 3)) {
+//                    if ((isPSLMatch(matchStatus) && position == 2)
+//                            || (!isPSLMatch(matchStatus) && position == 3)) {
 //                        mTypeFilteredData.AllMatchStatus.add(matchStatus);
 //                    }
 //                }

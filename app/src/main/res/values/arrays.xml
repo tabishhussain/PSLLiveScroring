@@ -8,6 +8,14 @@
         <item>Match Results</item>
     </string-array>
 
+    <string-array name="psl_teams">
+        <item>lahore</item>
+        <item>karachi</item>
+        <item>islamabad</item>
+        <item>peshawar</item>
+        <item>quetta</item>
+    </string-array>
+
     <string-array name="Spinnerfilter">
         <item>All</item>
         <item>Lahore</item>

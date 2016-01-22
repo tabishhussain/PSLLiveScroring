@@ -34,7 +34,9 @@ import java.util.Random;
 
 public class AllMatchesActivity extends AppCompatActivity {
 
-    public static final String TAG = "All_MATCH_ACTIVITY_TAG";
+    public static final String JSON_RESPONSE = "JSON_RESPONSE";
+    public static final String XML_RESPONSE = "XML_RESPONSE";
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;

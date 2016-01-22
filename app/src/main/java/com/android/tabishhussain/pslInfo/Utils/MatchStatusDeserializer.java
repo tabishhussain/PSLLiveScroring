@@ -31,7 +31,7 @@ public class MatchStatusDeserializer implements JsonDeserializer<MatchStatus> {
         matchStatus.setTeams(si);
         matchStatus.setMatchOvers(de);
         matchStatus.setPlayers(de);
-        Log.d(AllMatchesActivity.TAG, matchStatus.toString());
+        Log.d(AllMatchesActivity.JSON_RESPONSE, matchStatus.toString());
         return matchStatus;
     }
 

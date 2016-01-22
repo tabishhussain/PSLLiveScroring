@@ -46,7 +46,7 @@ public class ScoreUpdatingService extends Service {
             @Override
             public void run() {
                 if (isNetworkAvailable()) {
-                    CurrentData.loadData(mDataLoadListener);
+                    CurrentData.loadData(getApplicationContext(), mDataLoadListener);
                     mHandler.postDelayed(this, 180000);
                 } else {
                     mDataLoadListener.onError(getApplicationContext().
